@@ -1,0 +1,11 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: guarantee-service
+  datasource:
+    url: ${NEON_URL}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate

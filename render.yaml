@@ -1,0 +1,75 @@
+services:
+  - type: web
+    name: aquapulse-verify
+    runtime: java
+    buildCommand: mvn -pl verify-service -am clean package -DskipTests -q
+    startCommand: java -jar verify-service/target/verify-service-*.jar
+    envVars:
+      - key: NEON_URL
+        sync: false
+      - key: JAVA_OPTS
+        value: "-Xmx512m"
+    plan: free
+    healthCheckPath: /api/readings/health
+
+  - type: web
+    name: aquapulse-allocation
+    runtime: java
+    buildCommand: mvn -pl allocation-service -am clean package -DskipTests -q
+    startCommand: java -jar allocation-service/target/allocation-service-*.jar
+    envVars:
+      - key: NEON_URL
+        sync: false
+      - key: JAVA_OPTS
+        value: "-Xmx512m"
+    plan: free
+    healthCheckPath: /api/health
+
+  - type: web
+    name: aquapulse-guarantee
+    runtime: java
+    buildCommand: mvn -pl guarantee-service -am clean package -DskipTests -q
+    startCommand: java -jar guarantee-service/target/guarantee-service-*.jar
+    envVars:
+      - key: NEON_URL
+        sync: false
+      - key: JAVA_OPTS
+        value: "-Xmx512m"
+    plan: free
+    healthCheckPath: /api/guarantee/health
+
+  - type: web
+    name: aquapulse-copilot
+    runtime: java
+    buildCommand: mvn -pl copilot-service -am clean package -DskipTests -q
+    startCommand: java -jar copilot-service/target/copilot-service-*.jar
+    envVars:
+      - key: NEON_URL
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: JAVA_OPTS
+        value: "-Xmx512m"
+    plan: free
+    healthCheckPath: /api/copilot/health
+
+  - type: web
+    name: aquapulse-gateway
+    runtime: java
+    buildCommand: mvn -pl api-gateway -am clean package -DskipTests -q
+    startCommand: java -jar api-gateway/target/api-gateway-*.jar
+    envVars:
+      - key: VERIFY_SERVICE_URL
+        sync: false
+      - key: ALLOCATION_SERVICE_URL
+        sync: false
+      - key: GUARANTEE_SERVICE_URL
+        sync: false
+      - key: COPILOT_SERVICE_URL
+        sync: false
+      - key: REDIS_URL
+        value: redis://localhost:6379
+      - key: JAVA_OPTS
+        value: "-Xmx512m"
+    plan: free
+    healthCheckPath: /actuator/health

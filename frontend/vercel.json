@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "aquapulse",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "npm install",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],
+  "env": {
+    "VITE_API_URL": "https://aquapulse-gateway.onrender.com"
+  }
+}

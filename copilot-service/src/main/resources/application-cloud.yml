@@ -1,0 +1,35 @@
+spring:
+  config:
+    activate:
+      on-profile: cloud
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${NEON_JDBC_URL:${NEON_URL}}}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: Copilot-Neon-Pool
+      maximum-pool-size: 8
+      minimum-idle: 1
+      connection-timeout: 30000
+      validation-timeout: 5000
+      idle-timeout: 30000
+      max-lifetime: 120000
+      connection-test-query: SELECT 1
+      leak-detection-threshold: 60000
+      data-source-properties:
+        prepareThreshold: 0
+        sslmode: require
+        reWriteBatchedInserts: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    connect-retries: 5
+    connect-retries-interval: 2
+    locations: classpath:db/migration
+  ai:
+    openai:
+      base-url: ${AI_BASE_URL:https://api.groq.com/openai}
+      api-key: ${GROQ_API_KEY}
+      chat:
+        options:
+          model: llama-3.3-70b-versatile
+          temperature: 0.0

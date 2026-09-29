@@ -1,0 +1,15 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: copilot-service
+aquapulse:
+  llm:
+    groq:
+      api-key: ${GROQ_API_KEY}
+    cerebras:
+      api-key: ${CEREBRAS_API_KEY:}
+    gemini:
+      api-key: ${GEMINI_API_KEY:}
+    openrouter:
+      api-key: ${OPENROUTER_API_KEY:}

@@ -1,0 +1,18 @@
+spring:
+  config:
+    activate:
+      on-profile: cloud
+  data:
+    redis:
+      url: ${REDIS_URL}
+      timeout: 3000ms
+      connect-timeout: 5000ms
+      client-type: lettuce
+      lettuce:
+        shutdown-timeout: 2000ms
+        pool:
+          enabled: true
+          max-active: 8
+          max-idle: 4
+          min-idle: 1
+          max-wait: 2000ms
