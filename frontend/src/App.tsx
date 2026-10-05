@@ -9,9 +9,13 @@ import { FloatingWidget } from './components/FloatingWidget';
 import { WorkedAllocationTable } from './components/WorkedAllocationTable';
 import { W2SignalBoard } from './components/widgets/W2SignalBoard';
 import { W3ZoneStress } from './components/widgets/W3ZoneStress';
+import { W4CapProvenance } from './components/widgets/W4CapProvenance';
 import { W5AllocationWaterfall } from './components/widgets/W5AllocationWaterfall';
 import { W6ObjectGraph } from './components/widgets/W6ObjectGraph';
 import { W9MerkleInspector } from './components/widgets/W9MerkleInspector';
+import { DrillPresetsBar } from './components/DrillPresetsBar';
+import { CommitteeDialog } from './components/CommitteeDialog';
+import { CsvDropModal } from './components/CsvDropModal';
 import { ObjectInspector } from './components/ObjectInspector';
 import { ProveItDrawer } from './components/ProveItDrawer';
 import { CommandBar } from './components/CommandBar';
@@ -34,6 +38,11 @@ export default function App() {
     setHonestyPanelOpen,
     openProveIt,
     setCommandBarOpen,
+    farmerOverrides,
+    uploadedCsvRows,
+    uploadedCsvHash,
+    committeeDecisions,
+    poolOverride,
   } = useStore();
 
   // Load dashboard data: snapshot-first with graceful fallback
@@ -46,8 +55,27 @@ export default function App() {
   // Tier-0 client-side TS core math computation
   const model = useMemo(() => {
     if (!snapshot) return null;
-    return computeTier0(snapshot, assumptions, verifiedVsReports);
-  }, [snapshot, assumptions, verifiedVsReports]);
+    return computeTier0(
+      snapshot,
+      assumptions,
+      verifiedVsReports,
+      farmerOverrides,
+      uploadedCsvRows,
+      uploadedCsvHash,
+      committeeDecisions,
+      poolOverride
+    );
+  }, [
+    snapshot,
+    assumptions,
+    verifiedVsReports,
+    farmerOverrides,
+    uploadedCsvRows,
+    uploadedCsvHash,
+    committeeDecisions,
+    poolOverride,
+  ]);
+
 
   if (!model) {
     return (
@@ -211,6 +239,9 @@ export default function App() {
           />
         </section>
 
+        {/* S8 Drill Presets & Stress Sandboxes Bar (§8.8 W12, §8.11) */}
+        <DrillPresetsBar model={model} />
+
         {/* Aquifer Full-Bleed Map Visualization & Floating Widgets (§8.5) */}
         <section className="map-section" aria-label="Aquifer Map Visualization">
           <LayerTree />
@@ -228,6 +259,10 @@ export default function App() {
 
             <FloatingWidget id="w3" badge={<Chip variant="LIVE" size="sm" label="SOE Gauge" />}>
               <W3ZoneStress model={model} />
+            </FloatingWidget>
+
+            <FloatingWidget id="w4" badge={<Chip variant="SYNTH" size="sm" label="M4 Trajectories" />}>
+              <W4CapProvenance model={model} />
             </FloatingWidget>
 
             <FloatingWidget id="w5" badge={<Chip variant="LIVE" size="sm" label="Waterfall" />}>
@@ -257,6 +292,9 @@ export default function App() {
       <HonestyPanel />
       <ProveItDrawer />
       <CommandBar model={model} />
+      <CommitteeDialog model={model} />
+      <CsvDropModal />
     </div>
   );
 }
+

@@ -150,8 +150,28 @@ export const ObjectInspector: React.FC<ObjectInspectorProps> = ({ model }) => {
           </div>
         </section>
 
-        {/* Prove It Action */}
+        {/* Actions */}
         <div className="inspector-footer">
+          {selectedFarmer.escrow > 0 && (
+            <button
+              className="committee-trigger-btn"
+              onClick={() => useStore.getState().setCommitteeModalOpen(true, selectedFarmer.id)}
+              style={{
+                background: 'rgba(255, 181, 71, 0.15)',
+                border: '1px solid #ffb547',
+                color: '#ffb547',
+                padding: '0.45rem 0.8rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: '0.78rem',
+                marginBottom: '0.5rem',
+                width: '100%',
+              }}
+            >
+              ⚖️ Open Village Committee Hearing (§6.5)
+            </button>
+          )}
           <button
             className="prove-it-trigger-btn"
             onClick={() => openProveIt({ farmer: selectedFarmer })}
@@ -163,3 +183,4 @@ export const ObjectInspector: React.FC<ObjectInspectorProps> = ({ model }) => {
     </div>
   );
 };
+

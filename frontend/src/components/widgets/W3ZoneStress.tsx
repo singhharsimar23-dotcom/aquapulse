@@ -1,5 +1,6 @@
 import React from 'react';
 import { ComputedDashboardModel } from '../../lib/snapshotLoader';
+import { useStore } from '../../store/useStore';
 import { Num } from '../Num';
 import { Exempt } from '../Exempt';
 import { Chip } from '../../design';
@@ -10,6 +11,8 @@ interface W3ZoneStressProps {
 }
 
 export const W3ZoneStress: React.FC<W3ZoneStressProps> = ({ model }) => {
+  const { stressViewMode, setStressViewMode } = useStore();
+
   const getProv = (kind: 'SYNTH' | 'LIVE' | 'REPLAY' | 'ASSUMPTION' | 'USER', source: string): Prov => ({
     kind,
     source,
@@ -21,10 +24,24 @@ export const W3ZoneStress: React.FC<W3ZoneStressProps> = ({ model }) => {
   const provBRef = getProv('ASSUMPTION', 'CGWB FY2025 Block Assessment Safe Yield');
   const provPool = getProv('LIVE', 'Conformal bucket forecast cap pool');
 
-  const soe = model.SOE_verified_pct;
+  // Before/after-verification stress view
+  let soe = model.SOE_verified_pct;
+  let tier = model.tier_verified;
+  let modeLabel = 'Verified Dual-Signal Blend';
+  if (stressViewMode === 'reports') {
+    soe = model.SOE_reports_pct;
+    tier = model.tier_reports;
+    modeLabel = 'Reports-Only Demand';
+  } else if (stressViewMode === 'meter') {
+    soe = model.SOE_meter_pct;
+    tier = model.tier_meter;
+    modeLabel = 'Feeder Meter-Only Demand';
+  }
+
   // Needle angle for semicircular gauge: 0% -> -90deg, 150% -> 90deg
   const clampSoe = Math.min(150, Math.max(0, soe));
   const needleRotation = -90 + (clampSoe / 150) * 180;
+
 
   return (
     <div className="w3-zone-stress" role="region" aria-label="W3 Zone Stress Gauge">
@@ -91,12 +108,35 @@ export const W3ZoneStress: React.FC<W3ZoneStressProps> = ({ model }) => {
             <Num value={soe} prov={provSOE} precision={1} unit="%" className="gauge-num" />
           </div>
           <Chip
-            variant={model.tier_verified === 'Over-exploited' ? 'critical' : 'ok'}
+            variant={tier === 'Over-exploited' ? 'critical' : tier === 'Critical' ? 'review' : 'ok'}
             size="md"
-            label={model.tier_verified}
+            label={tier}
           />
+          <span className="mode-sublabel text-2">{modeLabel}</span>
         </div>
       </div>
+
+      <div className="stress-mode-pills">
+        <button
+          className={`mode-btn ${stressViewMode === 'reports' ? 'active' : ''}`}
+          onClick={() => setStressViewMode('reports')}
+        >
+          Reports (89.2%)
+        </button>
+        <button
+          className={`mode-btn ${stressViewMode === 'meter' ? 'active' : ''}`}
+          onClick={() => setStressViewMode('meter')}
+        >
+          Meter (110.8%)
+        </button>
+        <button
+          className={`mode-btn ${stressViewMode === 'verified' ? 'active' : ''}`}
+          onClick={() => setStressViewMode('verified')}
+        >
+          Verified (103.0%)
+        </button>
+      </div>
+
 
       <div className="gauge-meta-list">
         <div className="gauge-meta-item">

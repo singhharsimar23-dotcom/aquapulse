@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { CsvFarmerRow } from '@aquapulse/core';
 
 export interface LayerVisibility {
   basemap: 'liberty' | 'esri' | 'gibs' | 'dark';
@@ -41,6 +42,13 @@ export interface SelectedObject {
   id: string;
 }
 
+export interface FarmerOverride {
+  R?: number | null;
+  E?: number | null;
+  land?: number;
+  Q?: number;
+}
+
 export interface AppState {
   selectedFarmerId: string | null;
   selectedWellId: string | null;
@@ -56,6 +64,18 @@ export interface AppState {
   isProveItOpen: boolean;
   isCommandBarOpen: boolean;
   proveItContext: Record<string, unknown> | null;
+
+  // S8 State: Sandboxes, Drills, Committee, CSV, Stress
+  farmerOverrides: Record<string, FarmerOverride>;
+  committeeDecisions: Record<string, 'CONFIRMED' | 'DISMISSED'>;
+  activePreset: string;
+  poolOverride: number | null;
+  uploadedCsvRows: CsvFarmerRow[] | null;
+  uploadedCsvHash: string | null;
+  stressViewMode: 'verified' | 'reports' | 'meter';
+  isCsvModalOpen: boolean;
+  isCommitteeModalOpen: boolean;
+  committeeFarmerId: string | null;
 
   // Actions
   setSelectedFarmerId: (id: string | null) => void;
@@ -76,6 +96,18 @@ export interface AppState {
   setProveItOpen: (open: boolean) => void;
   setCommandBarOpen: (open: boolean) => void;
   openProveIt: (ctx?: Record<string, unknown> | null) => void;
+
+  // S8 Actions
+  setFarmerOverride: (farmerId: string, updates: Partial<FarmerOverride>) => void;
+  resetFarmerOverrides: () => void;
+  applyPreset: (presetName: string) => void;
+  setPoolOverride: (pool: number | null) => void;
+  setCommitteeDecision: (farmerId: string, decision: 'CONFIRMED' | 'DISMISSED') => void;
+  resetCommitteeDecisions: () => void;
+  setUploadedCsv: (rows: CsvFarmerRow[] | null, hash: string | null) => void;
+  setStressViewMode: (mode: 'verified' | 'reports' | 'meter') => void;
+  setCsvModalOpen: (open: boolean) => void;
+  setCommitteeModalOpen: (open: boolean, farmerId?: string | null) => void;
 }
 
 const DEFAULT_ASSUMPTIONS: Assumptions = {
@@ -127,6 +159,18 @@ const DEFAULT_WIDGETS: Record<string, WidgetLayout> = {
     collapsed: false,
     visible: true,
   },
+  w4: {
+    id: 'w4',
+    title: 'Cap Provenance & Trajectories',
+    formulaRef: '§6.4',
+    x: 40,
+    y: 820,
+    width: 580,
+    height: 420,
+    pinned: false,
+    collapsed: false,
+    visible: true,
+  },
   w5: {
     id: 'w5',
     title: 'Allocation Waterfall',
@@ -155,10 +199,10 @@ const DEFAULT_WIDGETS: Record<string, WidgetLayout> = {
     id: 'w9',
     title: 'Merkle Inspector & Tamper Proof',
     formulaRef: '§6.8',
-    x: 40,
+    x: 640,
     y: 820,
-    width: 600,
-    height: 360,
+    width: 420,
+    height: 420,
     pinned: false,
     collapsed: false,
     visible: true,
@@ -167,15 +211,16 @@ const DEFAULT_WIDGETS: Record<string, WidgetLayout> = {
     id: 'inspector',
     title: 'Object Inspector',
     formulaRef: '§8.5',
-    x: 660,
+    x: 1080,
     y: 820,
     width: 360,
-    height: 360,
+    height: 420,
     pinned: false,
     collapsed: false,
     visible: true,
   },
 };
+
 
 const STORAGE_KEY = 'aquapulse_widgets_v1';
 
@@ -292,6 +337,18 @@ export const useStore = create<AppState>((set) => ({
       persistWidgets(nextWidgets);
       return { widgets: nextWidgets };
     }),
+  // S8 State initial values
+  farmerOverrides: {},
+  committeeDecisions: {},
+  activePreset: 'Zone-A benchmark',
+  poolOverride: null,
+  uploadedCsvRows: null,
+  uploadedCsvHash: null,
+  stressViewMode: 'verified',
+  isCsvModalOpen: false,
+  isCommitteeModalOpen: false,
+  committeeFarmerId: null,
+
   resetWidgetLayouts: () => {
     persistWidgets(DEFAULT_WIDGETS);
     set({ widgets: { ...DEFAULT_WIDGETS } });
@@ -303,5 +360,102 @@ export const useStore = create<AppState>((set) => ({
   setProveItOpen: (open) => set({ isProveItOpen: open }),
   setCommandBarOpen: (open) => set({ isCommandBarOpen: open }),
   openProveIt: (ctx = null) => set({ isProveItOpen: true, proveItContext: ctx }),
+
+  // S8 Actions
+  setFarmerOverride: (farmerId, updates) =>
+    set((state) => ({
+      farmerOverrides: {
+        ...state.farmerOverrides,
+        [farmerId]: {
+          ...(state.farmerOverrides[farmerId] || {}),
+          ...updates,
+        },
+      },
+    })),
+  resetFarmerOverrides: () => set({ farmerOverrides: {} }),
+
+  applyPreset: (presetName) => {
+    switch (presetName) {
+      case 'Zone-A benchmark':
+        set({
+          activePreset: 'Zone-A benchmark',
+          farmerOverrides: {},
+          poolOverride: 104,
+          committeeDecisions: {},
+          uploadedCsvRows: null,
+          uploadedCsvHash: null,
+        });
+        break;
+      case 'Incorrect data':
+        set({
+          activePreset: 'Incorrect data',
+          farmerOverrides: { C: { R: 20, E: 50 } },
+          poolOverride: 130,
+          committeeDecisions: {},
+        });
+        break;
+      case 'Severe stress':
+        set({
+          activePreset: 'Severe stress',
+          farmerOverrides: {},
+          poolOverride: 78,
+          committeeDecisions: {},
+        });
+        break;
+      case 'Different crops':
+        set({
+          activePreset: 'Different crops',
+          farmerOverrides: {
+            A: { R: 18, E: 18 },
+            B: { R: 40, E: 38 },
+            C: { R: 25, E: 25 },
+            D: { R: 32, E: 32 },
+          },
+          poolOverride: 104,
+        });
+        break;
+      case 'Dead meter':
+        set({
+          activePreset: 'Dead meter',
+          farmerOverrides: { C: { R: 20, E: null } },
+          poolOverride: 104,
+          committeeDecisions: {},
+        });
+        break;
+      case 'Load my CSV':
+        set({
+          activePreset: 'Load my CSV',
+          isCsvModalOpen: true,
+        });
+        break;
+      default:
+        set({ activePreset: presetName });
+    }
+  },
+
+  setPoolOverride: (pool) => set({ poolOverride: pool }),
+  setCommitteeDecision: (farmerId, decision) =>
+    set((state) => ({
+      committeeDecisions: {
+        ...state.committeeDecisions,
+        [farmerId]: decision,
+      },
+    })),
+  resetCommitteeDecisions: () => set({ committeeDecisions: {} }),
+  setUploadedCsv: (rows, hash) =>
+    set({
+      uploadedCsvRows: rows,
+      uploadedCsvHash: hash,
+      farmerOverrides: {},
+      committeeDecisions: {},
+    }),
+  setStressViewMode: (mode) => set({ stressViewMode: mode }),
+  setCsvModalOpen: (open) => set({ isCsvModalOpen: open }),
+  setCommitteeModalOpen: (open, farmerId = null) =>
+    set({
+      isCommitteeModalOpen: open,
+      committeeFarmerId: farmerId ?? (open ? 'C' : null),
+    }),
 }));
+
 

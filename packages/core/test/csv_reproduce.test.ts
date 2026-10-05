@@ -115,4 +115,20 @@ F-A,2026-W10,7.0,1,28,28,some_data`;
     expect(res.warnings).toContain("Unknown column 'custom_metadata' ignored");
     expect(res.rows.length).toBe(1);
   });
+
+  it('a CSV with a missing meter cell -> NO_METER, U=R', () => {
+    const missingMeterCsv = `farmer_id,week,land_acres,well_discharge_m3h,reported_hours,meter_hours
+F-A,2026-W10,7.0,1,28,
+F-B,2026-W10,7.5,1,30,30`;
+
+    const res = parseAndValidateCsv(missingMeterCsv);
+    expect(res.rows[0].meterHours).toBeNull();
+    expect(res.rows[0].reportedHours).toBe(28);
+
+    const blend = trustBlend(res.rows[0].reportedHours, res.rows[0].meterHours);
+    expect(blend.flags).toContain('NO_METER');
+    expect(blend.U).toBe(28);
+    expect(blend.T).toBeNull();
+  });
 });
+

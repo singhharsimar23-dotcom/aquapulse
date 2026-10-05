@@ -115,6 +115,26 @@ export const CommandBar: React.FC<CommandBarProps> = ({ model }) => {
             <div
               className="command-item"
               onClick={() => {
+                useStore.getState().setCsvModalOpen(true);
+                setCommandBarOpen(false);
+              }}
+            >
+              <span className="item-icon">📁</span>
+              <span className="item-title">Bring-Your-Own CSV (§8.11)</span>
+            </div>
+            <div
+              className="command-item"
+              onClick={() => {
+                useStore.getState().setCommitteeModalOpen(true, 'C');
+                setCommandBarOpen(false);
+              }}
+            >
+              <span className="item-icon">⚖️</span>
+              <span className="item-title">Village Water Committee Hearing (§6.5)</span>
+            </div>
+            <div
+              className="command-item"
+              onClick={() => {
                 openProveIt();
                 setCommandBarOpen(false);
               }}
@@ -133,6 +153,7 @@ export const CommandBar: React.FC<CommandBarProps> = ({ model }) => {
               <span className="item-title">Toggle Theis Cones of Depression</span>
             </div>
           </div>
+
         </div>
       </div>
     </div>

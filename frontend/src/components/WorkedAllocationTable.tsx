@@ -12,7 +12,20 @@ interface WorkedAllocationTableProps {
 }
 
 export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ model, snapshot }) => {
-  const { selectedFarmerId, setSelectedFarmerId, assumptions, verifiedVsReports, openProveIt } = useStore();
+  const {
+    selectedFarmerId,
+    setSelectedFarmerId,
+    assumptions,
+    verifiedVsReports,
+    openProveIt,
+    farmerOverrides,
+    uploadedCsvRows,
+    uploadedCsvHash,
+    committeeDecisions,
+    poolOverride,
+    setCsvModalOpen,
+    setCommitteeModalOpen,
+  } = useStore();
   const [recomputeDiff, setRecomputeDiff] = useState<number | null>(null);
 
   const getProv = (kind: 'SYNTH' | 'LIVE' | 'REPLAY' | 'ASSUMPTION' | 'USER', source: string): Prov => ({
@@ -24,7 +37,16 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
 
   const handleRecompute = () => {
     if (!snapshot) return;
-    const fresh = computeTier0(snapshot, assumptions, verifiedVsReports);
+    const fresh = computeTier0(
+      snapshot,
+      assumptions,
+      verifiedVsReports,
+      farmerOverrides,
+      uploadedCsvRows,
+      uploadedCsvHash,
+      committeeDecisions,
+      poolOverride
+    );
     let maxDiff = 0.0;
     for (let i = 0; i < model.farmers.length; i++) {
       const diff = Math.abs(model.farmers[i].alloc - fresh.farmers[i].alloc);
@@ -32,6 +54,7 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
     }
     setRecomputeDiff(maxDiff);
   };
+
 
   const handleExportCSV = () => {
     const headers = [
@@ -98,6 +121,9 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
         </div>
 
         <div className="table-btn-group">
+          <button className="csv-btn-header" onClick={() => setCsvModalOpen(true)} title="Drop or upload custom CSV file">
+            📁 BYO CSV
+          </button>
           <button className="recompute-btn" onClick={handleRecompute} title="Re-run TS math core on current parameters">
             ⚡ Recompute in your browser
           </button>
@@ -105,6 +131,7 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
             📥 Export CSV
           </button>
         </div>
+
       </div>
 
       {recomputeDiff !== null && (
@@ -202,8 +229,23 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
                     <Num value={f.released} prov={provAlloc} unit="h" precision={1} />
                   </td>
                   <td className={f.escrow > 0 ? 'text-review' : ''} title="Held in escrow">
-                    <Num value={f.escrow} prov={provAlloc} unit="h" precision={1} />
+                    <div className="escrow-cell-flex">
+                      <Num value={f.escrow} prov={provAlloc} unit="h" precision={1} />
+                      {f.escrow > 0 && (
+                        <button
+                          className="table-hearing-btn"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setCommitteeModalOpen(true, f.id);
+                          }}
+                          title="Open Village Committee Hearing for this farmer"
+                        >
+                          ⚖️ Hearing
+                        </button>
+                      )}
+                    </div>
                   </td>
+
                   <td>
                     {f.flags.length > 0 ? (
                       f.flags.map((flag) => (

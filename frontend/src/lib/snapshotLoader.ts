@@ -8,13 +8,15 @@ import {
   trustBlend,
   waterFill,
   escrowSplit,
+  applyCommitteeDecision,
   leafSync,
   rootSync,
   toHex,
   fmt6,
   TrustBlendResult,
+  CsvFarmerRow,
 } from '@aquapulse/core';
-import { Assumptions } from '../store/useStore';
+import { Assumptions, FarmerOverride } from '../store/useStore';
 import { Prov } from './prov';
 
 export interface SnapshotFarmer {
@@ -89,6 +91,7 @@ export interface ComputedDashboardModel {
   tier_verified: string;
   merkleRoot: string;
   farmers: ComputedFarmer[];
+  unusedPool?: number;
   isClientComputed: boolean;
   provenance: Record<string, Prov>;
 }
@@ -106,10 +109,49 @@ export function classifyTier(soePct: number): string {
 export function computeTier0(
   snapshot: SnapshotData,
   assumptions: Assumptions,
-  verifiedVsReports: boolean
+  verifiedVsReports: boolean,
+  farmerOverrides?: Record<string, FarmerOverride>,
+  uploadedCsvRows?: CsvFarmerRow[] | null,
+  uploadedCsvHash?: string | null,
+  committeeDecisions?: Record<string, 'CONFIRMED' | 'DISMISSED'>,
+  poolOverride?: number | null
 ): ComputedDashboardModel {
-  const farmers = snapshot.farmers;
-  const pool = snapshot.pool;
+  let farmers: SnapshotFarmer[];
+  let provKind: 'LIVE' | 'REPLAY' | 'SYNTH' | 'USER' = 'LIVE';
+  let provSource = snapshot.source;
+  let provHash = snapshot.hash;
+
+  if (uploadedCsvRows && uploadedCsvRows.length > 0) {
+    provKind = 'USER';
+    provSource = 'Bring-your-own CSV file §8.11';
+    provHash = uploadedCsvHash || snapshot.hash;
+    farmers = uploadedCsvRows.map((r, i) => ({
+      id: r.farmerId,
+      name: `Farmer ${r.farmerId}`,
+      land: Number(r.landAcres),
+      R: r.reportedHours,
+      E: r.meterHours,
+      Q: Number(r.wellDischargeM3h),
+      flags: [],
+      coords: [78.6 + i * 0.02, 20.7 + i * 0.02] as [number, number],
+    }));
+  } else {
+    farmers = snapshot.farmers.map((f) => {
+      const ov =
+        farmerOverrides?.[f.id] ||
+        farmerOverrides?.[`F-${f.id}`] ||
+        farmerOverrides?.[f.id.replace('F-', '')];
+      return {
+        ...f,
+        R: ov && 'R' in ov ? (ov.R ?? null) : f.R,
+        E: ov && 'E' in ov ? (ov.E ?? null) : f.E,
+        land: ov && 'land' in ov && ov.land !== undefined ? ov.land : f.land,
+        Q: ov && 'Q' in ov && ov.Q !== undefined ? ov.Q : f.Q,
+      };
+    });
+  }
+
+  const pool = poolOverride ?? snapshot.pool;
   const B_REF = snapshot.B_REF;
 
   // 1. Trust blend per farmer
@@ -134,7 +176,7 @@ export function computeTier0(
 
   // 2. Water filling allocation
   const allocResult = waterFill(demands, weights, pool, assumptions.floor_m3);
-  const allocations = allocResult.alloc;
+  let finalAlloc = [...allocResult.alloc];
 
   // 3. Escrow split
   const reports = farmers.map((f) => f.R);
@@ -142,18 +184,61 @@ export function computeTier0(
   const reviews = blends.map((b) => b.flags.includes('REVIEW'));
   const discharges = farmers.map((f) => f.Q || 1.0);
 
-  const escrowResults = escrowSplit(allocations, reports, meters, reviews, discharges);
+  const escrowResults = escrowSplit(finalAlloc, reports, meters, reviews, discharges);
+  let finalReleased = [...escrowResults.released];
+  let finalEscrow = [...escrowResults.escrow];
+  let unusedPool = 0.0;
 
-  // 4. Merkle tree receipt
+  // 4. Committee decisions (§6.5)
+  if (committeeDecisions && Object.keys(committeeDecisions).length > 0) {
+    farmers.forEach((f, idx) => {
+      const dec =
+        committeeDecisions[f.id] ||
+        committeeDecisions[`F-${f.id}`] ||
+        committeeDecisions[f.id.replace('F-', '')];
+      if (dec) {
+        const commRes = applyCommitteeDecision({
+
+          decision: dec,
+          farmerIndex: idx,
+          farmerId: f.id,
+          demands,
+          weights,
+          pool,
+          floor: assumptions.floor_m3,
+          R: reports,
+          E: meters,
+          review: reviews,
+          currentAlloc: finalAlloc,
+          currentReleased: finalReleased,
+          currentEscrow: finalEscrow,
+          Q: discharges,
+        });
+        finalAlloc = commRes.alloc.map(Number);
+        finalReleased = commRes.released.map(Number);
+        finalEscrow = commRes.escrow.map(Number);
+        unusedPool = Number(commRes.unused);
+
+        if (dec === 'CONFIRMED') {
+          blends[idx] = {
+            ...blends[idx],
+            flags: blends[idx].flags.filter((fl) => fl !== 'REVIEW'),
+          };
+        }
+      }
+    });
+  }
+
+  // 5. Merkle tree receipt
   const leaves = farmers.map((f, idx) =>
     leafSync([
       f.id,
       snapshot.zone,
       String(snapshot.week),
       fmt6(demands[idx]),
-      fmt6(allocations[idx]),
-      fmt6(escrowResults.released[idx]),
-      fmt6(escrowResults.escrow[idx]),
+      fmt6(finalAlloc[idx]),
+      fmt6(finalReleased[idx]),
+      fmt6(finalEscrow[idx]),
       blends[idx].flags.join('|'),
     ])
   );
@@ -174,9 +259,9 @@ export function computeTier0(
     U: demands[idx],
     T: blends[idx].T ?? 0,
     lam: blends[idx].lam ?? 0,
-    alloc: allocations[idx],
-    released: escrowResults.released[idx],
-    escrow: escrowResults.escrow[idx],
+    alloc: finalAlloc[idx],
+    released: finalReleased[idx],
+    escrow: finalEscrow[idx],
     weight: weights[idx],
     floor: assumptions.floor_m3,
     flags: blends[idx].flags,
@@ -186,8 +271,8 @@ export function computeTier0(
     zone: snapshot.zone,
     week: snapshot.week,
     asOf: snapshot.asOf,
-    source: snapshot.source,
-    hash: snapshot.hash,
+    source: provSource,
+    hash: provHash,
     B_REF,
     pool,
     sumR,
@@ -201,11 +286,12 @@ export function computeTier0(
     tier_verified: classifyTier(SOE_verified_pct),
     merkleRoot: treeRoot,
     farmers: computedFarmers,
+    unusedPool,
     isClientComputed: true,
     provenance: {
       ...snapshot.provenance,
       merkleRoot: {
-        kind: 'LIVE',
+        kind: provKind,
         source: 'TypeScript Merkle Core (client computed)',
         asOf: snapshot.asOf,
         hash: treeRoot,
@@ -213,6 +299,7 @@ export function computeTier0(
     },
   };
 }
+
 
 export async function loadSnapshot(): Promise<SnapshotData> {
   const resp = await fetch('/snapshot.json');
