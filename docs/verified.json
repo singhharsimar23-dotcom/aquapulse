@@ -465,5 +465,49 @@
     "sha256": "f9b83ec8babc8f375fa8a5d3cafbed7082b37a905fd3e451b7470e3193d801da",
     "excerpt": "Theorem 4.1 in Gibbs & Candes (NeurIPS 2021) establishes that for any sequence of observations and learning rate gamma > 0, the long-run average coverage error satisfies |(1/T) sum_{t=1}^T err_t - alpha_target| <= |alpha_{T+1} - alpha_1| / (gamma * T) <= 1 / (gamma * T).",
     "note": "Fetched and verified in S1b per AQUAPULSE_V9_2_LEAN.md S1b"
+  },
+  {
+    "id": "spike:openfreemap-liberty-style",
+    "name": "openfreemap-liberty",
+    "claim": "OpenFreeMap liberty style JSON glyphs and sources",
+    "tag": "VERIFIED",
+    "url": "https://tiles.openfreemap.org/styles/liberty",
+    "fetchedAt": "2026-10-05T06:36:00Z",
+    "sha256": "6010998863b4876911ac9a2d62c9a28d97c8877f6d20cd158b74808572257b60",
+    "excerpt": "glyphs: https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf; sources: [ne2_shaded, openmaptiles]",
+    "note": "S6 spike for OpenFreeMap liberty style glyphs and sources"
+  },
+  {
+    "id": "spike:esri-world-imagery-service",
+    "name": "esri-world-imagery-service",
+    "claim": "Esri World Imagery MapServer service metadata and copyrightText",
+    "tag": "VERIFIED",
+    "url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer?f=json",
+    "fetchedAt": "2026-10-05T06:36:00Z",
+    "sha256": "3c41ca79d7ddc2267fa1ac60c43263acbfed04915e3b2433e6b8e5d30378e2dc",
+    "excerpt": "copyrightText: Source: Esri, Vantor, Earthstar Geographics, and the GIS User Community; terms: https://www.esri.com/en-us/legal/terms/data-attributions",
+    "note": "S6 spike for Esri copyrightText and service metadata"
+  },
+  {
+    "id": "spike:esri-world-imagery-tile-0-0-0",
+    "name": "esri-world-imagery-tile",
+    "claim": "Esri World Imagery sample tile 0/0/0 status, type, size, hash",
+    "tag": "VERIFIED",
+    "url": "https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/0/0/0",
+    "fetchedAt": "2026-10-05T06:36:00Z",
+    "sha256": "fbdcf5bf29c479e3f5f465c80f48c1552bf0efb6e0d25c01c7b0c5a97a0ced57",
+    "excerpt": "status: 200, Content-Type: image/jpeg, size: 14401 bytes",
+    "note": "S6 spike for Esri tile baseline hash and health check"
+  },
+  {
+    "id": "spike:gibs-wmts-getcapabilities",
+    "name": "gibs-capabilities",
+    "claim": "GIBS GetCapabilities WMTS template and candidate layers",
+    "tag": "VERIFIED",
+    "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+    "fetchedAt": "2026-10-05T06:36:00Z",
+    "sha256": "3734ec24e4175f0a9b97a74e1434d1108d4eafe505ee680bc8de589709672cbb",
+    "excerpt": "TrueColor: MODIS_Aqua_CorrectedReflectance_TrueColor, Soil: SMAP_L3_Passive_Brightness_Temp_H, Veg: VIIRS_SNPP_NDVI_8Day; template: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/{Layer}/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
+    "note": "S6 spike for GIBS candidate layer IDs and WMTS template"
   }
 ]

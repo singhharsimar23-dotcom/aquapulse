@@ -1,77 +1,166 @@
-import React, { useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
-
-const T = {
-  en: { title:'AquaPulse — Guaranteed Water Ledger', lang:'हिंदी', stress:'Zone Stress', pool:'Weekly Pool', verified:'Verified Total', mstar:'Safe-Yield Cap (m*)', farmer:'Farmer', acres:'Acres', rep:'Reported h', elec:'Elec h', trust:'Trust', verH:'Verified h', alloc:'Alloc h', note:'Zone-A worked example — synthetic world [M] = measured by stress harness' },
-  hi: { title:'एक्वापल्स — प्रमाणित जल बहीखाता', lang:'English', stress:'ज़ोन तनाव', pool:'साप्ताहिक पूल', verified:'सत्यापित कुल', mstar:'सुरक्षित-उपज सीमा', farmer:'किसान', acres:'एकड़', rep:'रिपोर्ट घं', elec:'बिजली घं', trust:'विश्वास', verH:'सत्यापित घं', alloc:'आवंटन घं', note:'Zone-A कार्यकारी उदाहरण — सिंथेटिक दुनिया' }
-}
-
-const FARMERS = [
-  { id:'A', acres:7,   rep:28, elec:28, trust:1.000, ver:28.0, alloc:28.0 },
-  { id:'B', acres:7.5, rep:30, elec:30, trust:1.000, ver:30.0, alloc:30.0 },
-  { id:'C', acres:5,   rep:20, elec:50, trust:0.400, ver:38.0, alloc:26.0 },
-  { id:'D', acres:9.5, rep:38, elec:36, trust:0.947, ver:28.8, alloc:20.0 },
-]
-
-const badgeClass = (p: number) => p > 100 ? 'over' : p >= 90 ? 'critical' : p > 70 ? 'semi' : 'safe'
-const label = (p: number) => p > 100 ? 'Over-exploited' : p >= 90 ? 'Critical' : p > 70 ? 'Semi-Critical' : 'Safe'
+import React, { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useStore } from './store/useStore';
+import { fetchDashboardData } from './lib/api';
+import { computeTier0, SnapshotData } from './lib/snapshotLoader';
+import { MapShell } from './components/MapShell';
+import { WorkedAllocationTable } from './components/WorkedAllocationTable';
+import { WeeklyScrubber } from './components/WeeklyScrubber';
+import { HonestyPanel } from './components/HonestyPanel';
+import { ColdStartBanner } from './components/ColdStartBanner';
+import { Num } from './components/Num';
+import { Exempt } from './components/Exempt';
+import { Prov } from './lib/prov';
 
 export default function App() {
-  const [lang, setLang] = useState<'en'|'hi'>('en')
-  const tx = T[lang]
-  const stress = 96.0, pool = 104.0, verified = 124.8, mstar = 0.80
-  const chart = FARMERS.map(f => ({ name:`F${f.id}`, rep:f.rep, elec:f.elec, ver:f.ver, alloc:f.alloc }))
+  const {
+    week,
+    assumptions,
+    verifiedVsReports,
+    setVerifiedVsReports,
+    lite,
+  } = useStore();
+
+  // Load dashboard data: snapshot-first with graceful fallback
+  const { data: snapshot, isLoading } = useQuery<SnapshotData>({
+    queryKey: ['dashboard', 'Zone-A', week],
+    queryFn: () => fetchDashboardData('Zone-A', week),
+    staleTime: 60_000,
+  });
+
+  // Tier-0 client-side TS core math computation
+  const model = useMemo(() => {
+    if (!snapshot) return null;
+    return computeTier0(snapshot, assumptions, verifiedVsReports);
+  }, [snapshot, assumptions, verifiedVsReports]);
+
+  if (!model) {
+    return (
+      <div className="app-loading">
+        <div className="spinner" />
+        <p>Loading AquaPulse snapshot...</p>
+      </div>
+    );
+  }
+
+  const provSOE: Prov = {
+    kind: 'LIVE',
+    source: 'Dual-signal telemetry blend against CGWB B_REF',
+    asOf: model.asOf,
+    hash: model.hash,
+  };
+
+  const provPool: Prov = {
+    kind: 'LIVE',
+    source: 'Conformal bucket forecast cap pool',
+    asOf: model.asOf,
+    hash: model.hash,
+  };
+
+  const provDemand: Prov = {
+    kind: 'SYNTH',
+    source: 'Sum of dual-signal farmer demands (U)',
+    asOf: model.asOf,
+    hash: model.hash,
+  };
+
+  const provFloor: Prov = {
+    kind: 'ASSUMPTION',
+    source: 'Drinking water dignity allocation floor',
+    asOf: model.asOf,
+  };
 
   return (
-    <div className="app">
-      <header>
-        <h1>{tx.title}</h1>
-        <button className="lang" onClick={() => setLang(lang==='en'?'hi':'en')}>{tx.lang}</button>
+    <div className={`app ${lite ? 'mode-lite' : ''}`}>
+      <ColdStartBanner isLoading={isLoading} asOf={model.asOf} />
+
+      <header className="app-header">
+        <div className="header-brand">
+          <div className="brand-logo">💧</div>
+          <div>
+            <h1 className="brand-title">AquaPulse</h1>
+            <span className="brand-subtitle text-2">Groundwater Allocation & Provenance Ledger</span>
+          </div>
+        </div>
+
+        <div className="header-meta">
+          <div className="meta-pill">
+            <span className="meta-label">Zone:</span>
+            <Exempt reason="id" className="meta-val font-mono">{model.zone}</Exempt>
+          </div>
+          <div className="meta-pill">
+            <span className="meta-label">Week:</span>
+            <Exempt reason="axis-tick" className="meta-val font-mono">{model.week}</Exempt>
+          </div>
+          <div className="meta-pill">
+            <span className="meta-label">Tier:</span>
+            <span className={`tier-badge tier-${model.tier_verified.toLowerCase().replace(' ', '-')}`}>
+              {model.tier_verified}
+            </span>
+          </div>
+        </div>
+
+        <div className="header-actions">
+          <label className="toggle-label" title="Compare self-reported vs dual-signal verified allocations">
+            <input
+              type="checkbox"
+              checked={verifiedVsReports}
+              onChange={(e) => setVerifiedVsReports(e.target.checked)}
+            />
+            <span className="toggle-text">Reports-Only Comparison</span>
+          </label>
+        </div>
       </header>
 
-      <div className="grid">
-        <div className="card"><div className="label">{tx.stress}</div><div className="val">{stress}%</div><span className={`badge ${badgeClass(stress)}`}>{label(stress)}</span></div>
-        <div className="card"><div className="label">{tx.pool}</div><div className="val">{pool} h</div></div>
-        <div className="card"><div className="label">{tx.verified}</div><div className="val">{verified} h</div></div>
-        <div className="card"><div className="label">{tx.mstar}</div><div className="val">{mstar}</div></div>
-      </div>
+      <main className="dashboard-content">
+        <section className="stats-strip" aria-label="Key Aquifer Metrics">
+          <div className="stat-card">
+            <span className="stat-label text-2">Zone Stress (SOE)</span>
+            <div className="stat-value-row">
+              <Num value={model.SOE_verified_pct} prov={provSOE} unit="%" precision={1} />
+            </div>
+            <span className="stat-subtext text-3">Threshold 100% = Over-exploited</span>
+          </div>
 
-      <div className="chart-box">
-        <div className="label" style={{marginBottom:'1rem'}}>Hours per Farmer</div>
-        <ResponsiveContainer width="100%" height={240}>
-          <BarChart data={chart}>
-            <XAxis dataKey="name" stroke="#475569"/>
-            <YAxis stroke="#475569"/>
-            <Tooltip contentStyle={{background:'#1e293b',border:'1px solid #334155'}}/>
-            <Bar dataKey="rep"   fill="#38bdf8" name="Reported"/>
-            <Bar dataKey="elec"  fill="#818cf8" name="Elec-Implied"/>
-            <Bar dataKey="ver"   fill="#34d399" name="Verified"/>
-            <Bar dataKey="alloc" fill="#fb923c" name="Allocated"/>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+          <div className="stat-card">
+            <span className="stat-label text-2">Weekly Cap Pool</span>
+            <div className="stat-value-row">
+              <Num value={model.pool} prov={provPool} unit="m³" precision={1} />
+            </div>
+            <span className="stat-subtext text-3">Calibrated safe-yield envelope</span>
+          </div>
 
-      <div className="tbl">
-        <table>
-          <thead><tr>
-            <th>{tx.farmer}</th><th>{tx.acres}</th><th>{tx.rep}</th>
-            <th>{tx.elec}</th><th>{tx.trust}</th><th>{tx.verH}</th><th>{tx.alloc}</th>
-          </tr></thead>
-          <tbody>
-            {FARMERS.map(f=>(
-              <tr key={f.id}>
-                <td className="bold">Farmer {f.id}</td>
-                <td>{f.acres}</td><td>{f.rep}</td><td>{f.elec}</td>
-                <td className={f.trust>=0.8?'green':'orange'}>{f.trust.toFixed(3)}</td>
-                <td>{f.ver.toFixed(1)}</td>
-                <td className="bold">{f.alloc.toFixed(1)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          <div className="stat-card">
+            <span className="stat-label text-2">Verified Total Demand (U)</span>
+            <div className="stat-value-row">
+              <Num value={model.sumU} prov={provDemand} unit="h" precision={1} />
+            </div>
+            <span className="stat-subtext text-3">Fused from reports & meters</span>
+          </div>
 
-      <p className="note">{tx.note}</p>
+          <div className="stat-card">
+            <span className="stat-label text-2">Dignity Floor</span>
+            <div className="stat-value-row">
+              <Num value={assumptions.floor_m3} prov={provFloor} unit="m³" precision={0} />
+            </div>
+            <span className="stat-subtext text-3">Protected domestic allocation</span>
+          </div>
+        </section>
+
+        <section className="map-section" aria-label="Aquifer Map Visualization">
+          <MapShell farmers={model.farmers} />
+        </section>
+
+        <section className="table-section" aria-label="Allocation Vectors">
+          <WorkedAllocationTable model={model} />
+        </section>
+      </main>
+
+      <footer className="app-footer">
+        <WeeklyScrubber />
+      </footer>
+
+      <HonestyPanel />
     </div>
-  )
+  );
 }

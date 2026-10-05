@@ -118,6 +118,7 @@ export async function sha256(data: Uint8Array): Promise<Uint8Array> {
     return new Uint8Array(buf);
   }
   try {
+    // @ts-ignore
     const nodeCrypto = await import('node:crypto');
     return new Uint8Array(nodeCrypto.createHash('sha256').update(data).digest());
   } catch {
@@ -375,7 +376,7 @@ export function cloneAndTamper(
     if (origLeaf[i] !== tamperedLeaf[i]) diffCount++;
   }
 
-  clone[targetIndex] = tamperedLeaf;
+  clone[targetIndex] = tamperedLeaf as any;
 
   const originalRoot = toHex(rootSync(leaves));
   const tamperedRoot = toHex(rootSync(clone));

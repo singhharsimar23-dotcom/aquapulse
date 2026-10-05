@@ -121,6 +121,23 @@ def main():
                 run_command([npx_bin, "vitest", "run"], log_file, cwd=core_dir)
             except Exception as err:
                 print(str(err), file=sys.stderr)
+        # Step 5: Tile health check (§8.7)
+        try:
+            run_command([sys.executable, "scripts/tile_health.py"], log_file)
+        except Exception as err:
+            print(str(err), file=sys.stderr)
+            sys.exit(1)
+
+        # Step 6: Frontend Vitest and build verification (S6)
+        frontend_dir = REPO_ROOT / "frontend"
+        if frontend_dir.exists() and (frontend_dir / "package.json").exists():
+            try:
+                import shutil
+                npm_bin = shutil.which("npm") or "npm"
+                run_command([npm_bin, "test"], log_file, cwd=frontend_dir)
+                run_command([npm_bin, "run", "build"], log_file, cwd=frontend_dir)
+            except Exception as err:
+                print(str(err), file=sys.stderr)
                 sys.exit(1)
 
     print(f"\nVerification passed! Evidence written to {log_path}")
