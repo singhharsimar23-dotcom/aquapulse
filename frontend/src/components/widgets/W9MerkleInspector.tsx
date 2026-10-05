@@ -145,9 +145,12 @@ export const W9MerkleInspector: React.FC<W9MerkleInspectorProps> = ({ model }) =
                   {isTampered && <Chip variant="critical" size="sm" label="TAMPERED" />}
                 </div>
                 <div className="leaf-payload font-mono text-2">
-                  <span title="Payload: [id, zone, week, U, alloc, released, escrow, flags]">
+                  <Exempt
+                    reason="hash"
+                    title="Payload: [id, zone, week, U, alloc, released, escrow, flags]"
+                  >
                     {leaf.fields.join(' | ')}
-                  </span>
+                  </Exempt>
                 </div>
               </div>
             );

@@ -565,6 +565,26 @@
     "tag": "ASSUMPTION",
     "unit": "class_code",
     "default": 40,
-    "note": "ESA WorldCover cropland code expected 40; fallback zone polygon per \u00a77 and \u00a710 S4"
+    "note": "ESA WorldCover cropland code expected 40; fallback zone polygon per §7 and §10 S4"
+  },
+  {
+    "id": "pib:atal-bhujal:prid-2291800",
+    "claim": "Atal Bhujal Yojana gram-panchayat water budgets and participatory groundwater management continuing to 2027",
+    "tag": "VERIFIED",
+    "url": "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=2291800&lang=1",
+    "fetchedAt": "2026-10-05T08:31:00Z",
+    "sha256": "d700287d81d6547957a29b4d861019be74d1066b6ea6eb5a86ef8e069ce48a47",
+    "excerpt": "Atal Bhujal Yojana : 30 JUL 2026 by PIB Delhi Atal Bhujal Yojana, a community-led participatory groundwater management scheme, was implemented on pilot basis across 8,203 water-stressed Gram Panchayats in 229 blocks of 80 districts",
+    "note": "PIB PRID 2291800 verified for institutional wording (§12)"
+  },
+  {
+    "id": "pib:maha-water:prid-2267551",
+    "claim": "MAHA Water Mission (ANRF + Ministry of Jal Shakti) to support startups and water technology deployment with Bharat-WIN",
+    "tag": "VERIFIED",
+    "url": "https://www.pib.gov.in/PressReleaseIframePage.aspx?PRID=2267551",
+    "fetchedAt": "2026-10-05T08:31:00Z",
+    "sha256": "82bc42ad06bdb80f832ad1e75294045ffe87a214191a743b93790b5a0a24097e",
+    "excerpt": "MAHA Water Mission to support StartUps MAHA Water Mission to support technology development, field validation and deployment for addressing critical water challenges MAHA Water Mission: A five-pronged initiative for water resource management",
+    "note": "PIB PRID 2267551 verified for institutional wording (§12)"
   }
 ]

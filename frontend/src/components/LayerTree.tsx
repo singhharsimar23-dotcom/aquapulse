@@ -33,7 +33,7 @@ export const LayerTree: React.FC = () => {
       {/* Layer 1: Basemap switcher */}
       <div className="layer-tree-group">
         <div className="group-title-row">
-          <span className="group-title">1. Basemap Engine</span>
+          <span className="group-title"><Exempt reason="id">1.</Exempt> Basemap Engine</span>
           <Chip variant="LIVE" size="sm" />
         </div>
         <div className="basemap-chips">
@@ -63,7 +63,14 @@ export const LayerTree: React.FC = () => {
                 />
                 <span className="layer-name">
                   <Exempt reason="id">{idx + 2}. </Exempt>
-                  {l.name}
+                  {l.name.includes('3D') ? (
+                    <>
+                      <Exempt reason="version">3D</Exempt>
+                      {l.name.replace('3D', '')}
+                    </>
+                  ) : (
+                    l.name
+                  )}
                 </span>
               </label>
 

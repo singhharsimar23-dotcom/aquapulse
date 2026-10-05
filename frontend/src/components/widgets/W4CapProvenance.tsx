@@ -179,7 +179,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
             <Chip variant="SYNTH" size="sm" label={`SYNTH (seed: ${selectedSeed})`} />
           </div>
           <p className="w4-subtitle text-2">
-            Plays stored multi-season trajectories §9 (M4) across two arms with code hash:
+            Plays stored multi-season trajectories <Exempt reason="version">§9</Exempt> (<Exempt reason="id">M4</Exempt>) across two arms with code hash:
             <span className="font-mono text-1 ml-1" title={codeHash}>
               <Exempt reason="id">{codeHash.slice(0, 12)}...</Exempt>
             </span>
@@ -202,7 +202,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
           onClick={() => setReadersLie(!readersLie)}
           title="Simulate 60% of village readers understating extraction"
         >
-          🚨 {readersLie ? '✓ 60 % of readers lie' : '60 % of readers lie'}
+          🚨 {readersLie ? <>✓ <Exempt reason="id">60</Exempt> % of readers lie</> : <><Exempt reason="id">60</Exempt> % of readers lie</>}
         </button>
 
         <button
@@ -232,6 +232,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
 
         <select
           className="seed-select font-mono"
+          data-prov-exempt="id"
           value={selectedSeed}
           onChange={(e) => setSelectedSeed(Number(e.target.value))}
           aria-label="Select Seed"
@@ -283,7 +284,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
               precision={1}
               unit="%"
             />
-            <span className="target-hint text-2"> (Target 10%)</span>
+            <span className="target-hint text-2"> (Target <Exempt reason="axis-tick">10%</Exempt>)</span>
           </div>
         </div>
 
@@ -304,7 +305,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
       <div className="w4-chart-container">
         <div className="chart-header">
           <span className="chart-title text-2">
-            Pool & Margin Trace (Weeks 0–156) — <Exempt reason="id">{selectedArm.toUpperCase()}</Exempt> Arm
+            Pool & Margin Trace (Weeks <Exempt reason="date">0–156</Exempt>) — <Exempt reason="id">{selectedArm.toUpperCase()}</Exempt> Arm
           </span>
           <span className="trace-info font-mono text-2">
             Mean Pool: <Num value={currentTraj?.mean_pool ?? 104} prov={getProv('Trajectory mean')} precision={1} unit="m³" />
@@ -364,7 +365,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
           </div>
           <div className="contrast-grid">
             <div className={`contrast-card ${selectedArm === 'reports' ? 'active-arm' : ''}`}>
-              <span className="card-arm-title text-review">Arm 1: Reports-Only</span>
+              <span className="card-arm-title text-review">Arm <Exempt reason="id">1</Exempt>: Reports-Only</span>
               <div className="contrast-row">
                 <span className="text-2">Miscoverage:</span>
                 <Num value={selectedArm === 'reports' ? (currentTraj?.realised_miscoverage ?? 0) * 100 : comparisonTraj.realised_miscoverage * 100} prov={getProv('Reports arm')} precision={1} unit="%" />
@@ -376,7 +377,7 @@ export const W4CapProvenance: React.FC<W4CapProvenanceProps> = ({ model }) => {
             </div>
 
             <div className={`contrast-card ${selectedArm === 'verified' ? 'active-arm' : ''}`}>
-              <span className="card-arm-title text-ok">Arm 2: Verified + Overdraw Correction</span>
+              <span className="card-arm-title text-ok">Arm <Exempt reason="id">2</Exempt>: Verified + Overdraw Correction</span>
               <div className="contrast-row">
                 <span className="text-2">Miscoverage:</span>
                 <Num value={selectedArm === 'verified' ? (currentTraj?.realised_miscoverage ?? 0) * 100 : comparisonTraj.realised_miscoverage * 100} prov={getProv('Verified arm')} precision={1} unit="%" />

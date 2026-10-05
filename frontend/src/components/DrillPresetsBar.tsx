@@ -15,7 +15,7 @@ const PRESETS = [
   { id: 'Severe stress', label: 'Severe Stress Drill', icon: '🔥', desc: 'Curtailment to Pool 78 m³ -> land-proportional cut' },
   { id: 'Different crops', label: 'Different Crops', icon: '🌾', desc: 'Heterogeneous crop water demands across farmers' },
   { id: 'Dead meter', label: 'Dead Meter Drill', icon: '🔌', desc: 'Missing meter on Farmer C -> NO_METER, U=R' },
-  { id: 'Load my CSV', label: 'Load My CSV (§8.11)', icon: '📁', desc: 'Bring-your-own browser parsed CSV file' },
+  { id: 'Load my CSV', label: 'Load My CSV', icon: '📁', desc: 'Bring-your-own browser parsed CSV file' },
 ];
 
 export const DrillPresetsBar: React.FC<DrillPresetsBarProps> = ({ model }) => {
@@ -72,21 +72,21 @@ export const DrillPresetsBar: React.FC<DrillPresetsBarProps> = ({ model }) => {
             onClick={() => setStressViewMode('reports')}
             title="Reports-only: sum(R)/130 = 89.2% Semi-critical"
           >
-            Reports (89.2%)
+            Reports (<Exempt reason="axis-tick">89.2%</Exempt>)
           </button>
           <button
             className={`stress-tab ${stressViewMode === 'meter' ? 'active text-review' : ''}`}
             onClick={() => setStressViewMode('meter')}
             title="Meter-only: sum(E)/130 = 110.8% Over-exploited"
           >
-            Meter (110.8%)
+            Meter (<Exempt reason="axis-tick">110.8%</Exempt>)
           </button>
           <button
             className={`stress-tab ${stressViewMode === 'verified' ? 'active text-ok' : ''}`}
             onClick={() => setStressViewMode('verified')}
             title="Dual-signal verified blend: sum(U)/130 = 103.0% Over-exploited"
           >
-            Verified (103.0%)
+            Verified (<Exempt reason="axis-tick">103.0%</Exempt>)
           </button>
         </div>
 

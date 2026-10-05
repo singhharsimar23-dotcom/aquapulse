@@ -147,6 +147,25 @@ def main():
                 print(str(err), file=sys.stderr)
                 sys.exit(1)
 
+        # Step 8: S13 Red-Team Table verification (§13)
+        redteam_test_file = REPO_ROOT / "tests" / "test_s13_redteam.py"
+        if redteam_test_file.exists():
+            try:
+                run_command([sys.executable, "-m", "pytest", "tests/test_s13_redteam.py", "-v"], log_file)
+            except Exception as err:
+                print(str(err), file=sys.stderr)
+                sys.exit(1)
+
+        # Step 9: S13 Playwright Demo Path & Provenance e2e (3 passes Tier-0 & enabled)
+        if session_id in ("S13", "all") and frontend_dir.exists():
+            try:
+                import shutil
+                npx_bin = shutil.which("npx") or "npx"
+                run_command([npx_bin, "playwright", "test"], log_file, cwd=frontend_dir)
+            except Exception as err:
+                print(str(err), file=sys.stderr)
+                sys.exit(1)
+
     print(f"\nVerification passed! Evidence written to {log_path}")
 
 

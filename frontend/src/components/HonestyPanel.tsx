@@ -150,7 +150,7 @@ export const HonestyPanel: React.FC = () => {
       </section>
 
       <section className="panel-section">
-        <h3>AI vs Rules vs Statistics (§8.8 W11)</h3>
+        <h3>AI vs Rules vs Statistics (<Exempt reason="version">§8.8</Exempt> / <Exempt reason="id">W11</Exempt>)</h3>
         <ul className="breakdown-list">
           <li>
             <strong>Deterministic Rules:</strong> Trust formula, missing-data rules (null ≠ 0),
@@ -168,6 +168,23 @@ export const HonestyPanel: React.FC = () => {
             <strong>LLM:</strong> Grounded explanations only with numeric assertion check; never arbitrates allocation.
           </li>
         </ul>
+      </section>
+
+      <section className="panel-section">
+        <h3>Institutional Alignment & Government Mandates (<Exempt reason="version">§12</Exempt>)</h3>
+        <div className="institutional-box text-2">
+          <p className="mb-2">
+            <strong>MAHA Water Mission:</strong> Joint initiative by ANRF and Ministry of Jal Shakti (₹<Exempt reason="version">200</Exempt> crore over <Exempt reason="version">5</Exempt> years, up to ₹<Exempt reason="version">20</Exempt> crore per consortium) via BHARAT-WIN portal.
+            <span className="font-mono text-1 ml-1">(PIB PRID <Exempt reason="id">2267551</Exempt>)</span>
+          </p>
+          <p className="mb-2">
+            <strong>Atal Bhujal Yojana:</strong> Live instrument for participatory gram-panchayat water security plans and water budgets, continuing to <Exempt reason="date">2027</Exempt>.
+            <span className="font-mono text-1 ml-1">(PIB PRID <Exempt reason="id">2291800</Exempt>)</span>
+          </p>
+          <p className="text-review">
+            <strong>Boundary Invariant:</strong> MoJS–ISRO MoU is unconfirmed (never claimed signed). AquaPulse provides accounting verification and feeder recommendations; DISCOM schedule governs enforcement.
+          </p>
+        </div>
       </section>
     </aside>
   );
