@@ -1,4 +1,4 @@
-1319a1dddac7446548df36ddce9b53e827661a7e 2026-10-05T06:29:57.367690+00:00
+2e1b2dde3603f82c5716ebdcb6751bda344ae1cf 2026-10-05T06:30:48.374997+00:00
 === Preflight network check ===
 PREFLIGHT OK
 === Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe reference/aquapulse_ref.py --selftest in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
@@ -11,14 +11,14 @@ CHECK OK
 
 [1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90mC:/Users/hprad/OneDrive/Desktop/aquapulse/packages/core[39m
 
+ [32mâœ“[39m test/merkle_single_bit.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 80[2mms[22m[39m
  [32mâœ“[39m test/missing_data_null.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 18[2mms[22m[39m
- [32mâœ“[39m test/merkle_single_bit.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 73[2mms[22m[39m
  [32mâœ“[39m test/csv_reproduce.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 30[2mms[22m[39m
- [32mâœ“[39m test/golden_parity.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 34[2mms[22m[39m
- [32mâœ“[39m test/property_waterfill.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 773[2mms[22m[39m
+ [32mâœ“[39m test/golden_parity.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32mâœ“[39m test/property_waterfill.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 823[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
 [2m      Tests [22m [1m[32m21 passed[39m[22m[90m (21)[39m
-[2m   Start at [22m 12:00:05
-[2m   Duration [22m 1.42s[2m (tests 41%, transform 38%, import 18%, worker 3%)[22m
+[2m   Start at [22m 12:00:55
+[2m   Duration [22m 1.59s[2m (transform 41%, tests 40%, import 16%, worker 3%)[22m
 
