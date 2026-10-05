@@ -47,12 +47,13 @@ def run_preflight():
     return "PREFLIGHT OK"
 
 
-def run_command(cmd, log_file):
-    print(f"=== Running: {' '.join(cmd)} ===")
-    log_file.write(f"=== Running: {' '.join(cmd)} ===\n")
+def run_command(cmd, log_file, cwd=None):
+    effective_cwd = cwd if cwd is not None else REPO_ROOT
+    print(f"=== Running: {' '.join(cmd)} in {effective_cwd} ===")
+    log_file.write(f"=== Running: {' '.join(cmd)} in {effective_cwd} ===\n")
     proc = subprocess.run(
         cmd,
-        cwd=REPO_ROOT,
+        cwd=effective_cwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
@@ -110,6 +111,17 @@ def main():
         except Exception as err:
             print(str(err), file=sys.stderr)
             sys.exit(1)
+
+        # Step 4: Core Vitest parity & property tests (S1b)
+        core_dir = REPO_ROOT / "packages" / "core"
+        if core_dir.exists() and (core_dir / "package.json").exists():
+            try:
+                import shutil
+                npx_bin = shutil.which("npx") or "npx"
+                run_command([npx_bin, "vitest", "run"], log_file, cwd=core_dir)
+            except Exception as err:
+                print(str(err), file=sys.stderr)
+                sys.exit(1)
 
     print(f"\nVerification passed! Evidence written to {log_path}")
 

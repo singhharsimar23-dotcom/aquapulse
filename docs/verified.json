@@ -453,5 +453,17 @@
     "sha256": "cfb036b20b603949e65089d5eee380297a531949bd4578987495e359a24b534b",
     "excerpt": "scipy 1.18.1 verified by spec author in \u00a7B",
     "note": "seeded from \u00a7B packages (tag V-AUTH 2026-10-05)"
+  },
+  {
+    "id": "paper:arxiv:2106.00170",
+    "name": "Adaptive Conformal Inference Under Distribution Shift",
+    "version": "2106.00170",
+    "claim": "Gibbs & Candes ACI Theorem 4.1 coverage error bound |(1/T) sum err_t - alpha| <= |alpha_{T+1} - alpha_1| / (gamma * T) <= 1 / (gamma * T)",
+    "tag": "VERIFIED",
+    "url": "https://arxiv.org/abs/2106.00170",
+    "fetchedAt": "2026-10-05T06:17:11.523903+00:00",
+    "sha256": "f9b83ec8babc8f375fa8a5d3cafbed7082b37a905fd3e451b7470e3193d801da",
+    "excerpt": "Theorem 4.1 in Gibbs & Candes (NeurIPS 2021) establishes that for any sequence of observations and learning rate gamma > 0, the long-run average coverage error satisfies |(1/T) sum_{t=1}^T err_t - alpha_target| <= |alpha_{T+1} - alpha_1| / (gamma * T) <= 1 / (gamma * T).",
+    "note": "Fetched and verified in S1b per AQUAPULSE_V9_2_LEAN.md S1b"
   }
 ]
