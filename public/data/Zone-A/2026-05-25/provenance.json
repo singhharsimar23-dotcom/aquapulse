@@ -1,0 +1,19 @@
+{
+  "kind": "REPLAY",
+  "scene_id": "S2B_T43QHC_20260525T052346_L2A",
+  "collection": "sentinel-2-c1-l2a",
+  "stac_item_url": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a/items/S2B_T43QHC_20260525T052346_L2A",
+  "datetime": "2026-05-25T05:33:10.544000+00:00",
+  "cloud_cover_pct": 2.201824,
+  "code_hash": "45d86395c5a50ab5f793a1f11d3fb86e6c9fe7bb88c65875a5277e0daafbd708",
+  "input_artifact_sha256": "e0859a161cd14dba99bae144c9765aff9d8d0b09b8b9893f3bc7ca724566012d",
+  "source": "Earth Search AWS Sentinel-2 sentinel-2-c1-l2a",
+  "asOf": "2026-05-25T05:33:10Z",
+  "cropland_mask_method": "zone_polygon_fallback",
+  "valid_classes_scl": [
+    4,
+    5
+  ],
+  "scale": 0.0001,
+  "offset": -0.1
+}

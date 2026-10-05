@@ -1,0 +1,12 @@
+{
+  "kind": "SYNTH",
+  "source": "pipelines/stress_traj.py",
+  "description": "Precomputed multi-season stress trajectories across baseline and verified arms",
+  "asOf": "2026-10-05T00:00:00Z",
+  "code_hash": "213bf4eb0a623f958bbbe18c393bc9281a81c7ff1f6492db29cf05d3a681c2e4",
+  "provenance": {
+    "kind": "SYNTH",
+    "source": "pipelines/stress_traj.py",
+    "asOf": "2026-10-05T00:00:00Z"
+  }
+}

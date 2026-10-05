@@ -517,6 +517,54 @@
     "tag": "ASSUMPTION",
     "unit": "m2/d and dimensionless",
     "default": "T=45, S=0.005",
-    "note": "AQUAPULSE_V9_2_LEAN.md §6.6 and S7: Deccan basalt transmissivity and storativity baseline assumptions, editable in UI"
+    "note": "AQUAPULSE_V9_2_LEAN.md \u00a76.6 and S7: Deccan basalt transmissivity and storativity baseline assumptions, editable in UI"
+  },
+  {
+    "id": "spike:earthsearch:s2-c1",
+    "claim": "Earth Search Sentinel-2 C1 L2A collection metadata",
+    "tag": "VERIFIED",
+    "url": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-c1-l2a",
+    "fetchedAt": "2026-10-05T08:19:25.018792+00:00",
+    "sha256": "e4c1e0e6400683f377c9d44ff373a45867e74495570f6b008ea7d241a026ab10",
+    "excerpt": "{\"type\":\"Collection\",\"id\":\"sentinel-2-c1-l2a\",\"title\":\"Sentinel-2 Collection 1 Level-2A\",\"description\":\"Sentinel-2 Collection 1 Level-2A, data from the Multispectral Instrument (MSI) onboard Sentinel-2\",\"stac_version\":\"1.0.0\",\"links\":[{\"rel\":\"self\",\"",
+    "note": "S4 spike: Earth Search S2 C1 L2A collection"
+  },
+  {
+    "id": "spike:earthsearch:s2-l2a",
+    "claim": "Earth Search Sentinel-2 L2A fallback collection metadata",
+    "tag": "VERIFIED",
+    "url": "https://earth-search.aws.element84.com/v1/collections/sentinel-2-l2a",
+    "fetchedAt": "2026-10-05T08:19:25.018792+00:00",
+    "sha256": "9c5fe9a8c8785d8439a1697cd91adc21f7ac45f7f3b95786c1398904c413975e",
+    "excerpt": "{\"type\":\"Collection\",\"id\":\"sentinel-2-l2a\",\"stac_version\":\"1.0.0\",\"title\":\"Sentinel-2 Level-2A\",\"description\":\"Global Sentinel-2 data from the Multispectral Instrument (MSI) onboard Sentinel-2\",\"links\":[{\"rel\":\"self\",\"type\":\"application/json\",\"href\":",
+    "note": "S4 spike: Earth Search S2 L2A fallback collection"
+  },
+  {
+    "id": "spike:openmeteo:et0-precip",
+    "claim": "Open-Meteo daily et0_fao_evapotranspiration and precipitation_sum",
+    "tag": "VERIFIED",
+    "url": "https://api.open-meteo.com/v1/forecast?latitude=20.7453&longitude=78.6022&daily=et0_fao_evapotranspiration,precipitation_sum&timezone=auto",
+    "fetchedAt": "2026-10-05T08:19:25.018792+00:00",
+    "sha256": "01c3e5a02016fa8ace628128afb00f76f62cb6aaba70d3b95016a5c8dd47947c",
+    "excerpt": "{\"latitude\":20.773285,\"longitude\":78.62487,\"generationtime_ms\":0.10943412780761719,\"utc_offset_seconds\":19800,\"timezone\":\"Asia/Kolkata\",\"timezone_abbreviation\":\"GMT+5:30\",\"elevation\":286.0,\"daily_units\":{\"time\":\"iso8601\",\"et0_fao_evapotranspiration\":",
+    "note": "S4 spike: Open-Meteo ET0 and rain for Wardha centroid"
+  },
+  {
+    "id": "spike:nominatim:wardha",
+    "claim": "Nominatim geocoding for Wardha Maharashtra",
+    "tag": "VERIFIED",
+    "url": "https://nominatim.openstreetmap.org/search?q=Wardha,+Maharashtra&format=json&limit=1",
+    "fetchedAt": "2026-10-05T08:19:25.018792+00:00",
+    "sha256": "5276564621ee66aaf7bed8fc2644fa2c159a6b42f6bc01b3dd5a76140136810f",
+    "excerpt": "[{\"place_id\":247664673,\"licence\":\"Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright\",\"osm_type\":\"relation\",\"osm_id\":1991095,\"lat\":\"20.8256231\",\"lon\":\"78.6131455\",\"class\":\"boundary\",\"type\":\"administrative\",\"place_rank\":10,\"importan",
+    "note": "S4 spike: Wardha anchor geocode 20.7453 N 78.6022 E"
+  },
+  {
+    "id": "spike:worldcover:cropland",
+    "claim": "ESA WorldCover cropland code 40 with zone polygon fallback",
+    "tag": "ASSUMPTION",
+    "unit": "class_code",
+    "default": 40,
+    "note": "ESA WorldCover cropland code expected 40; fallback zone polygon per \u00a77 and \u00a710 S4"
   }
 ]

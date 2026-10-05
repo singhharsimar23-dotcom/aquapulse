@@ -1,0 +1,32 @@
+{
+  "id": "S2B_T43QHC_20260525T052346_L2A",
+  "collection": "sentinel-2-c1-l2a",
+  "datetime": "2026-05-25T05:33:10.544000+00:00",
+  "cloud_cover": 2.201824,
+  "platform": "sentinel-2b",
+  "constellation": "sentinel-2",
+  "instruments": [
+    "msi"
+  ],
+  "bbox": [
+    77.862969,
+    19.771503,
+    78.930883,
+    20.776043
+  ],
+  "assets": {
+    "red": {
+      "href": "https://e84-earth-search-sentinel-data.s3.us-west-2.amazonaws.com/sentinel-2-c1-l2a/43/Q/HC/2026/5/S2B_T43QHC_20260525T052346_L2A/B04.tif",
+      "scale": 0.0001,
+      "offset": -0.1
+    },
+    "nir": {
+      "href": "https://e84-earth-search-sentinel-data.s3.us-west-2.amazonaws.com/sentinel-2-c1-l2a/43/Q/HC/2026/5/S2B_T43QHC_20260525T052346_L2A/B08.tif",
+      "scale": 0.0001,
+      "offset": -0.1
+    },
+    "scl": {
+      "href": "https://e84-earth-search-sentinel-data.s3.us-west-2.amazonaws.com/sentinel-2-c1-l2a/43/Q/HC/2026/5/S2B_T43QHC_20260525T052346_L2A/SCL.tif"
+    }
+  }
+}

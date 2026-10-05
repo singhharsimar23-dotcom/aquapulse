@@ -138,6 +138,13 @@ def main():
                 run_command([npm_bin, "run", "build"], log_file, cwd=frontend_dir)
             except Exception as err:
                 print(str(err), file=sys.stderr)
+        # Step 7: Real-data pipeline verification & artifact provenance loop (S4)
+        s4_test_file = REPO_ROOT / "tests" / "test_s4_pipeline.py"
+        if s4_test_file.exists():
+            try:
+                run_command([sys.executable, "-m", "pytest", "tests/test_s4_pipeline.py"], log_file)
+            except Exception as err:
+                print(str(err), file=sys.stderr)
                 sys.exit(1)
 
     print(f"\nVerification passed! Evidence written to {log_path}")
