@@ -2,21 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "framework": "vite",
-  "buildCommand": "cd aquapulse-pwa && npm install && npm run build",
-  "outputDirectory": "aquapulse-pwa/dist",
+  "installCommand": "npm --prefix packages/core install && npm --prefix frontend install --legacy-peer-deps",
+  "buildCommand": "npm --prefix frontend run build",
+  "outputDirectory": "frontend/dist",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://aquapulse-gateway.onrender.com/api/$1"
-    },
-    {
-      "source": "/actuator/(.*)",
-      "destination": "https://aquapulse-gateway.onrender.com/actuator/$1"
-    },
-    {
-      "source": "/((?!assets/|favicon.ico|manifest.webmanifest|sw.js).*)",
+      "source": "/((?!assets/|data/|snapshot.json|favicon.ico|manifest.webmanifest|sw.js).*)",
       "destination": "/index.html"
     }
   ],

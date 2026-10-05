@@ -14,10 +14,18 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-      - name: Install dependencies
+          python-version: '3.11'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Python dependencies
         run: |
-          pip install scipy==1.18.1
+          pip install pytest requests numpy pillow scipy
+      - name: Install Node dependencies
+        run: |
+          npm --prefix packages/core install
+          npm --prefix frontend install --legacy-peer-deps
       - name: Run verification
         run: |
-          make verify S=ci
+          python scripts/verify.py ci
