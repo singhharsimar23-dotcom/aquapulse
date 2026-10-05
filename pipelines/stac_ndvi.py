@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 """pipelines/stac_ndvi.py
 Sentinel-2 L2A STAC query, windowed COG ingestion, and NDVI processing conforming to:
 - AQUAPULSE_V9_2_LEAN.md §6.3 (Signal S weak corroboration, NDVI formula)
@@ -55,7 +56,7 @@ def search_sentinel_scene(
     bbox: List[float],
     date_range: str = DEFAULT_DATE_RANGE,
     max_cloud: float = 20.0,
-) -> Tuple[pystac_client.ItemSearch, str, Any]:
+) -> Tuple[Any, str, Any]:
     """Queries Earth Search STAC API for Sentinel-2 scene.
     Tries sentinel-2-c1-l2a first, falls back to sentinel-2-l2a.
     """
@@ -106,7 +107,7 @@ def extract_scale_offset(item: Any, band_key: str) -> Tuple[float, float]:
 def read_windowed_bands(
     item: Any,
     bbox: List[float],
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, List[List[float]], Window, Any]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, List[List[float]], Any, Any]:
     """Reads windowed COG data for red (B04), nir (B08), and scl (SCL).
     Resamples SCL (20m) to match red/nir (10m) using nearest neighbor per §6.3.
     Returns:
