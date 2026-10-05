@@ -17,12 +17,22 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 from PIL import Image
-import pyproj
-import pystac_client
-import rasterio
-from rasterio.enums import Resampling
-from rasterio.warp import transform_bounds
-from rasterio.windows import Window, from_bounds, transform as win_transform
+try:
+    import pyproj
+    import pystac_client
+    import rasterio
+    from rasterio.enums import Resampling
+    from rasterio.warp import transform_bounds
+    from rasterio.windows import Window, from_bounds, transform as win_transform
+except ImportError:
+    pyproj = None
+    pystac_client = None
+    rasterio = None
+    Resampling = None
+    transform_bounds = None
+    Window = None
+    from_bounds = None
+    win_transform = None
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STAC_API_URL = "https://earth-search.aws.element84.com/v1"

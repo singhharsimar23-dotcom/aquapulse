@@ -7,13 +7,16 @@ Unit and integration tests for Session S4 Real-Data Pipeline conforming to:
 """
 
 import json
+import sys
 from pathlib import Path
 import numpy as np
 import pytest
 
-from pipelines.stac_ndvi import compute_ndvi_and_stats
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from pipelines.stac_ndvi import compute_ndvi_and_stats
 DATA_DIR = REPO_ROOT / "public" / "data"
 
 

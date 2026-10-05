@@ -27,5 +27,7 @@ jobs:
           npm --prefix packages/core install
           npm --prefix frontend install --legacy-peer-deps
       - name: Run verification
+        env:
+          PYTHONPATH: .
         run: |
           python scripts/verify.py ci

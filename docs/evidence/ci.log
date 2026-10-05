@@ -1,0 +1,159 @@
+18203af91e9ed0a7455bc1ffb657aca73236a931 2026-10-05T10:53:33.351324+00:00
+=== Preflight network check ===
+PREFLIGHT OK
+=== Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe reference/aquapulse_ref.py --selftest in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
+SELFTEST OK
+=== Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe scripts/check.py --selftest in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
+SELFTEST OK
+=== Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe scripts/check.py in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
+CHECK OK
+=== Running: C:\Program Files\nodejs\npx.CMD vitest run in C:\Users\hprad\OneDrive\Desktop\aquapulse\packages\core ===
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90mC:/Users/hprad/OneDrive/Desktop/aquapulse/packages/core[39m
+
+ [32mâœ“[39m test/theis_cone.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mâœ“[39m test/merkle_single_bit.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32mâœ“[39m test/missing_data_null.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mâœ“[39m test/csv_reproduce.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32mâœ“[39m test/golden_parity.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32mâœ“[39m test/property_waterfill.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 766[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m      Tests [22m [1m[32m24 passed[39m[22m[90m (24)[39m
+[2m   Start at [22m 16:23:48
+[2m   Duration [22m 2.46s[2m (transform 41%, tests 27%, import 18%, worker 15%)[22m
+
+=== Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe scripts/tile_health.py in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
+{
+  "esri": {
+    "ok": true,
+    "status": 200,
+    "sha256": "fbdcf5bf29c479e3f5f465c80f48c1552bf0efb6e0d25c01c7b0c5a97a0ced57",
+    "matches_baseline": true
+  },
+  "openfreemap": {
+    "ok": true,
+    "status": 200,
+    "sha256": "6010998863b4876911ac9a2d62c9a28d97c8877f6d20cd158b74808572257b60",
+    "matches_baseline": true
+  }
+}
+TILE HEALTH OK
+=== Running: C:\Program Files\nodejs\npm.CMD test in C:\Users\hprad\OneDrive\Desktop\aquapulse\frontend ===
+
+> aquapulse-frontend@1.0.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90mC:/Users/hprad/OneDrive/Desktop/aquapulse/frontend[39m
+
+ [32mâœ“[39m src/test/provenance_dom.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mâœ“[39m src/test/s7_core.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mâœ“[39m src/test/prov.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mâœ“[39m src/test/hero.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32mâœ“[39m src/test/s8_sandbox_drills.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m27 passed[39m[22m[90m (27)[39m
+[2m   Start at [22m 16:23:55
+[2m   Duration [22m 3.07s[2m (transform 68%, import 27%, tests 3%, worker 2%)[22m
+
+[2m  Transform [22m [33mtransforming modules took 2.76s[39m[2m Â· 68% of tracked time, re-done on every run[22m
+[2m            [22m [2mpersist transforms across runs with [22m[33mfsModuleCache: true[39m
+[2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#caching-between-reruns[22m
+
+=== Running: C:\Program Files\nodejs\npm.CMD run build in C:\Users\hprad\OneDrive\Desktop\aquapulse\frontend ===
+
+> aquapulse-frontend@1.0.0 build
+> tsc && vite build
+
+[36mvite v8.3.2 [32mbuilding client environment for production...[36m[39m
+transforming...
+[33m[plugin rolldown:vite-resolve] Module "node:crypto" has been externalized for browser compatibility, imported by "C:/Users/hprad/OneDrive/Desktop/aquapulse/packages/core/src/merkle.ts". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+âœ“ 153 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                       0.39 kB â”‚ gzip:   0.29 kB
+dist/assets/jetbrains-mono-vietnamese-wght-normal-Bt-aOZkq.woff2      7.50 kB
+dist/assets/jetbrains-mono-greek-wght-normal-Bw9x6K1M.woff2           9.00 kB
+dist/assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2              10.25 kB
+dist/assets/inter-greek-ext-wght-normal-DlzME5K_.woff2               11.23 kB
+dist/assets/jetbrains-mono-cyrillic-wght-normal-D73BlboJ.woff2       12.10 kB
+dist/assets/jetbrains-mono-latin-ext-wght-normal-DBQx-q_a.woff2      15.19 kB
+dist/assets/inter-cyrillic-wght-normal-DqGufNeO.woff2                18.74 kB
+dist/assets/inter-greek-wght-normal-CkhJZR-_.woff2                   18.99 kB
+dist/assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2            25.96 kB
+dist/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2          40.40 kB
+dist/assets/inter-latin-wght-normal-Dx4kXJAl.woff2                   48.25 kB
+dist/assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2               85.06 kB
+dist/assets/index-DU6TXcPY.css                                      139.20 kB â”‚ gzip:  23.31 kB
+dist/assets/index-CCBpJiXE.js                                     1,440.67 kB â”‚ gzip: 401.72 kB
+
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32mâœ“ built in 2.40s[39m
+=== Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe -m pytest tests/test_s4_pipeline.py in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
+============================= test session starts =============================
+platform win32 -- Python 3.10.10, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\Users\hprad\OneDrive\Desktop\aquapulse
+plugins: anyio-4.13.0, asyncio-1.4.0
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 7 items
+
+tests\test_s4_pipeline.py .......                                        [100%]
+
+============================== warnings summary ===============================
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\__init__.py:113
+  C:\Users\hprad\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\__init__.py:113: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (7.6.0)/charset_normalizer (3.4.7) doesn't match a supported version!
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 7 passed, 1 warning in 1.62s =========================
+=== Running: C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe -m pytest tests/test_s13_redteam.py -v in C:\Users\hprad\OneDrive\Desktop\aquapulse ===
+============================= test session starts =============================
+platform win32 -- Python 3.10.10, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\hprad\AppData\Local\Programs\Python\Python310\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\hprad\OneDrive\Desktop\aquapulse
+plugins: anyio-4.13.0, asyncio-1.4.0
+asyncio: mode=strict, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 34 items
+
+tests/test_s13_redteam.py::test_redteam_cases[60_percent_liars-60% of readers understating extraction -> overdraw correction & escrow hold] PASSED [  2%]
+tests/test_s13_redteam.py::test_redteam_cases[collinear_farmers-Collinear well locations -> non-singular Theis drawdown superposition] PASSED [  5%]
+tests/test_s13_redteam.py::test_redteam_cases[zero_reports-All reports R=0 -> graceful handling, no division by zero] PASSED [  8%]
+tests/test_s13_redteam.py::test_redteam_cases[all_equal_reports-Symmetric equal reports -> exact numerical equality in allocations] PASSED [ 11%]
+tests/test_s13_redteam.py::test_redteam_cases[dead_meter_null_E-Missing meter reading E=null -> NO_METER flag, U=R, missing is null not 0] PASSED [ 14%]
+tests/test_s13_redteam.py::test_redteam_cases[report_missing-Missing report R=null -> NO_REPORT flag, U=E] PASSED [ 17%]
+tests/test_s13_redteam.py::test_redteam_cases[all_signals_missing-All signals null -> NO_DATA flag, U=0.0, graceful handling] PASSED [ 20%]
+tests/test_s13_redteam.py::test_redteam_cases[meter_0_with_pump_on-Feeder active with pump running but meter 0 -> anomaly flagged REVIEW] PASSED [ 23%]
+tests/test_s13_redteam.py::test_redteam_cases[floor_infeasible-Pool < sum of drinking water floors -> proportional floor scaling] PASSED [ 26%]
+tests/test_s13_redteam.py::test_redteam_cases[pool_less_than_sum_floors-Pool strictly below aggregate floors -> rationing preserves non-negativity] PASSED [ 29%]
+tests/test_s13_redteam.py::test_redteam_cases[escrow_timeout-Unresolved escrow remains escrowed or returned to pool, never reassigned to others] PASSED [ 32%]
+tests/test_s13_redteam.py::test_redteam_cases[confirmed_rerun_changes_others-Committee CONFIRMED decision for farmer C does not alter unassociated farmers] PASSED [ 35%]
+tests/test_s13_redteam.py::test_redteam_cases[committee_decision_replayed_twice-Replaying identical committee decision is idempotent] PASSED [ 38%]
+tests/test_s13_redteam.py::test_redteam_cases[no_clear_satellite_scene-100% cloud cover -> fallback to dated REPLAY with clear provenance] PASSED [ 41%]
+tests/test_s13_redteam.py::test_redteam_cases[monsoon_cloud-Monsoon cloud coverage -> satellite corroboration weight gracefully relaxes] PASSED [ 44%]
+tests/test_s13_redteam.py::test_redteam_cases[rainfed_green_false_positive-High NDVI from rainfall -> +/-50% corroboration band prevents false overdraw penalty] PASSED [ 47%]
+tests/test_s13_redteam.py::test_redteam_cases[R_and_E_agree_but_implausibly_low-Collusion check: R and E agree at 1 m3 when ET0 requires 30 m3 -> flagged] PASSED [ 50%]
+tests/test_s13_redteam.py::test_redteam_cases[sigma_spike_after_one_bad_week-Single outlier week does not cause runaway margin explosion in EMA] PASSED [ 52%]
+tests/test_s13_redteam.py::test_redteam_cases[groq_down-LLM provider outage -> deterministic rule-based grounded explanation fallback] PASSED [ 55%]
+tests/test_s13_redteam.py::test_redteam_cases[all_providers_down-Total network blackout -> Tier-0 offline browser engine functions 100%] PASSED [ 58%]
+tests/test_s13_redteam.py::test_redteam_cases[backend_asleep-Backend cold start / 503 -> frontend seamlessly falls back to snapshot cache] PASSED [ 61%]
+tests/test_s13_redteam.py::test_redteam_cases[db_asleep-Database disconnection -> cached snapshot served with offline provenance] PASSED [ 64%]
+tests/test_s13_redteam.py::test_redteam_cases[open_meteo_down-Weather service timeout -> fallback to stored climatological normals] PASSED [ 67%]
+tests/test_s13_redteam.py::test_redteam_cases[esri_tile_changed_watermarked-Tile hash divergence -> tile health detects and shifts to OpenFreeMap] PASSED [ 70%]
+tests/test_s13_redteam.py::test_redteam_cases[gibs_layer_removed-NASA GIBS context tile failure -> degrades gracefully without base map disruption] PASSED [ 73%]
+tests/test_s13_redteam.py::test_redteam_cases[tampered_ledger-Single byte change in allocation leaf -> Merkle root mismatch with exact diff] PASSED [ 76%]
+tests/test_s13_redteam.py::test_redteam_cases[odd_leaf_count-Odd number of Merkle leaves (3 or 5) -> promotes odd leaf without crashing] PASSED [ 79%]
+tests/test_s13_redteam.py::test_redteam_cases[hindi_digit_numerals-Hindi Devanagari numerals (\u0968\u096e, \u0969\u0966) -> normalized or rejected without crash] PASSED [ 82%]
+tests/test_s13_redteam.py::test_redteam_cases[wrong_number_llm_answer-Hallucinated number in LLM text -> NumericGroundingValidator rejects] PASSED [ 85%]
+tests/test_s13_redteam.py::test_redteam_cases[8k_tpm_exhaustion-LLM token rate limit -> graceful cached/rule fallback] PASSED [ 88%]
+tests/test_s13_redteam.py::test_redteam_cases[github_schedule_auto_disabled-Workflow paused -> pipeline scripts runnable offline via CLI] PASSED [ 91%]
+tests/test_s13_redteam.py::test_redteam_cases[malformed_csv-Malformed CSV with negative hours, bad syntax, >40 farmers -> rejected with line numbers] PASSED [ 94%]
+tests/test_s13_redteam.py::test_redteam_cases[csv_with_formula_script_cells-CSV injection attack (=CMD or <script>) -> stripped or rejected] PASSED [ 97%]
+tests/test_s13_redteam.py::test_redteam_cases[laptop_drops_into_lite_mid_demo-Low-power / WebGL disabled (?lite=1) -> Canvas 2D fallback runs smoothly] PASSED [100%]
+
+============================= 34 passed in 0.25s ==============================
