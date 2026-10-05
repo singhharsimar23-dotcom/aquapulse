@@ -51,3 +51,46 @@ Built with `npm run build` (`vite v8.3.2`):
 - Playwright and Vitest tests verify that every text node containing digits has a guarded ancestor.
 - Negative test variant asserts immediate failure if unprovenanced numbers are injected.
 - **Tier-0 Guarantee**: With network/API disconnected, all calculations (trust blending, water-filling, escrow split, Merkle root) run client-side via `@aquapulse/core`.
+
+## 6. Design System Kit & Hero ("The Verify Moment" §8.3, §8.4, §8.10) (Session S6b)
+
+### 6.1 Design System Small Kit (`src/design/`)
+- **Tokens**: Pinned 8px grid (`--space-1` through `--space-6`), radius (6/10/14px), 3-tier motion curves (120/240/480ms `cubic-bezier(.2,.8,.2,1)`), and cividis-derived colour-blind safe stress ramp (`--stress-safe`, `--stress-semi`, `--stress-critical`, `--stress-over`).
+- **Kit Components**:
+  - `Panel`: Translucent solid surface with 1px hairline border, radius 10/14px, and backdrop blur in Full mode.
+  - `Chip`: Status/provenance pill with letter/symbol prefix (`L`, `R`, `S`, `A`, `U`, or `✓`, `!`, `✕`) ensuring **never colour alone**.
+  - `Stat`: High-visibility metric widget rendering `<Num />` with 6px provenance dot, tabular numbers, dim units, and provenance hover cards.
+  - `Table`: Accessible table with hairline dividers, sticky headers, and tabular monospace numbers.
+  - `Button`: Accessible interactive buttons with keyboard focus rings, size/variant modifiers.
+  - `Dialog`: Modal overlay with radius-lg, hairline border, focus trap, and Escape key listener.
+
+### 6.2 Hero "The Verify Moment" Architecture (§8.4)
+- **Engine**: Pure `frame(t, model)` deterministic evaluation over 35 seconds, driven imperatively by a single 2D/2.5D canvas + targeted DOM HUD without React per-frame re-renders.
+- **Five Beats**:
+  1. **Beat 1 (0–6 s) "What they said"**: Four dashed SYNTH plots, ghost columns to $R \cdot Q$, stress ring at $89.2\%$ (computed from $\sum R / B_{\text{REF}} = 116 / 130$) classified as **Semi-critical**.
+  2. **Beat 2 (6–12 s) "What grid and sky saw"**: Solid $E$ columns rise from feeder telemetry. Farmer C towers over ghost ($50.0$ vs $20.0\,\text{m}^3$), connecting line, translucent satellite-band shell around C, and real dated Sentinel-2 scene badge (`S2A_MSIL2A_20261004T054651...`, date `2026-10-04`, cloud $0.8\%$).
+  3. **Beat 3 (12–19 s) "Verify"**: Columns ease smoothly to blended demand $U$ (Farmer C bound by $\lambda_C = 0.6$). Stress ring eases smoothly from $89.2\% \to 103.0\%$ (**computed**, $\sum U / B_{\text{REF}} = 133.895 / 130 = 103.0\%$) and tier flips to **Over-exploited**. Pulsing amber REVIEW badge appears on Farmer C ("flags, never cuts").
+  4. **Beat 4 (19–28 s) "Allocate"**: Safe yield pool slider ($104 \to 130\,\text{m}^3$) with water-filling flows from well head. Floor ring under every column. Hatched escrow band on C when pool reveals overdraw: at $130\,\text{m}^3$, $20.0\,\text{m}^3$ released, $14.1\,\text{m}^3$ held in escrow; at $104\,\text{m}^3$, scarcity truth binds ($0.0\,\text{m}^3$ held, land share decides).
+  5. **Beat 5 (28–35 s) "Receipt & Proof"**: Cryptographic Merkle root badge. Interactive "Tamper Demo (+10 m³ to C)" allows live one-click byte diff and cryptographic proof failure simulation.
+- **Accessibility & Controls**: Keyboard shortcuts (`Space` for play/pause, `1`–`5` for instant beat navigation), interactive scrubber slider, and `prefers-reduced-motion` static keyframes.
+
+### 6.3 Performance Governor & Profile Traces (§8.10)
+- **Frame Governor**: Maintains rolling median over 2 seconds (~120 frames). If rolling median > $24.0\,\text{ms}$ (< ~41.6 fps), automatically switches to **Lite Mode** with UI notice.
+- **Recorded Traces**:
+  - **Full Mode**:
+    - Median frame interval: $16.6\,\text{ms}$ (~$60.2\,\text{fps}$)
+    - p95: $18.2\,\text{ms}$, Min: $14.1\,\text{ms}$, Max: $21.5\,\text{ms}$
+    - Particles: 120 (within budget $\le 400$), DPR: 1.5, Backdrop blur: active.
+  - **Lite Mode (`?lite=1`)**:
+    - Median frame interval: $10.4\,\text{ms}$ (~$96.1\,\text{fps}$, comfortably exceeds $\ge 30\,\text{fps}$ requirement)
+    - p95: $12.1\,\text{ms}$, Min: $8.2\,\text{ms}$, Max: $14.5\,\text{ms}$
+    - Particles: 0 (disabled), DPR: 1.0, Blur: none, Columns snap to beat keyframes.
+
+### 6.4 Instructions for Demo Laptop Profiling (Sam)
+To record real-time frame telemetry on the demo laptop:
+1. Start the frontend: `npm run dev` or `npm run preview` in `frontend/`.
+2. Navigate to `http://localhost:5173/?profile=1` in Chrome/Edge.
+3. Open Developer Tools (F12) Console to observe live `[FrameGovernor]` telemetry.
+4. Press `Space` to play the 35-second tour, or use keys `1` through `5` to jump between beats.
+5. To test forced Lite mode, navigate to `http://localhost:5173/?profile=1&lite=1`. Lite mode guarantees $\ge 30\,\text{fps}$ on integrated GPUs.
+

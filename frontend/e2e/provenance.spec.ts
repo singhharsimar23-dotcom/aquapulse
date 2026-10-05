@@ -84,4 +84,18 @@ test.describe('DOM Provenance Enforcement (§8.6)', () => {
     expect(violations.length).toBeGreaterThan(0);
     expect(violations.some((v) => v.text.includes('999.99'))).toBe(true);
   });
+
+  test('Hero "The Verify Moment" beats maintain 100% DOM provenance compliance', async ({
+    page,
+  }) => {
+    await page.goto('/?lite=1');
+    await page.waitForSelector('.hero-section');
+
+    for (const beatKey of ['1', '2', '3', '4', '5']) {
+      await page.keyboard.press(beatKey);
+      const violations = await page.evaluate(PROVENANCE_EVAL_FN);
+      expect(violations).toEqual([]);
+    }
+  });
 });
+

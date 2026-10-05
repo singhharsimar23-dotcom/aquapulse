@@ -1,8 +1,10 @@
 import React from 'react';
 import { ComputedDashboardModel } from '../lib/snapshotLoader';
 import { Num } from './Num';
+import { Exempt } from './Exempt';
 import { Prov } from '../lib/prov';
 import { useStore } from '../store/useStore';
+import { Chip } from '../design';
 
 interface WorkedAllocationTableProps {
   model: ComputedDashboardModel;
@@ -27,7 +29,7 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
     <div className="table-card" role="region" aria-label="Worked Allocation Table">
       <div className="table-header">
         <div>
-          <h2 className="table-title">Worked Allocation Table (W1)</h2>
+          <h2 className="table-title">Worked Allocation Table (<Exempt reason="id">W1</Exempt>)</h2>
           <p className="table-subtitle text-2">
             Recomputed in your browser via TypeScript Core — Zero discrepancy with golden vectors
           </p>
@@ -100,12 +102,10 @@ export const WorkedAllocationTable: React.FC<WorkedAllocationTableProps> = ({ mo
                   <td>
                     {f.flags.length > 0 ? (
                       f.flags.map((flag) => (
-                        <span key={flag} className="flag-chip flag-review">
-                          {flag}
-                        </span>
+                        <Chip key={flag} variant="review" size="sm" label={flag} />
                       ))
                     ) : (
-                      <span className="flag-chip flag-ok">OK</span>
+                      <Chip variant="ok" size="sm" label="OK" />
                     )}
                   </td>
                 </tr>

@@ -8,8 +8,10 @@ import { WorkedAllocationTable } from './components/WorkedAllocationTable';
 import { WeeklyScrubber } from './components/WeeklyScrubber';
 import { HonestyPanel } from './components/HonestyPanel';
 import { ColdStartBanner } from './components/ColdStartBanner';
+import { Hero } from './components/Hero';
 import { Num } from './components/Num';
 import { Exempt } from './components/Exempt';
+import { Panel, Chip, Stat } from './design';
 import { Prov } from './lib/prov';
 
 export default function App() {
@@ -85,18 +87,20 @@ export default function App() {
 
         <div className="header-meta">
           <div className="meta-pill">
-            <span className="meta-label">Zone:</span>
+            <span className="meta-label text-2">Zone:</span>
             <Exempt reason="id" className="meta-val font-mono">{model.zone}</Exempt>
           </div>
           <div className="meta-pill">
-            <span className="meta-label">Week:</span>
+            <span className="meta-label text-2">Week:</span>
             <Exempt reason="axis-tick" className="meta-val font-mono">{model.week}</Exempt>
           </div>
           <div className="meta-pill">
-            <span className="meta-label">Tier:</span>
-            <span className={`tier-badge tier-${model.tier_verified.toLowerCase().replace(' ', '-')}`}>
-              {model.tier_verified}
-            </span>
+            <span className="meta-label text-2">Tier:</span>
+            <Chip
+              variant={model.tier_verified === 'Over-exploited' ? 'critical' : 'ok'}
+              size="sm"
+              label={model.tier_verified}
+            />
           </div>
         </div>
 
@@ -113,44 +117,64 @@ export default function App() {
       </header>
 
       <main className="dashboard-content">
+        {/* The Verify Moment: 35s Guided Hero Tour (§8.4) */}
+        <Hero model={model} />
+
+        {/* Aquifer High-Level Telemetry Strip (§8.3) */}
         <section className="stats-strip" aria-label="Key Aquifer Metrics">
-          <div className="stat-card">
-            <span className="stat-label text-2">Zone Stress (SOE)</span>
-            <div className="stat-value-row">
-              <Num value={model.SOE_verified_pct} prov={provSOE} unit="%" precision={1} />
-            </div>
-            <span className="stat-subtext text-3">Threshold 100% = Over-exploited</span>
-          </div>
+          <Stat
+            label="Zone Stress (SOE)"
+            value={model.SOE_verified_pct}
+            prov={provSOE}
+            unit="%"
+            precision={1}
+            subtext={<span>Threshold <Exempt reason="axis-tick">100%</Exempt> = Over-exploited</span>}
+            badge={
+              <Chip
+                variant={model.SOE_verified_pct > 100 ? 'critical' : 'ok'}
+                size="sm"
+                label={model.tier_verified}
+              />
+            }
+          />
 
-          <div className="stat-card">
-            <span className="stat-label text-2">Weekly Cap Pool</span>
-            <div className="stat-value-row">
-              <Num value={model.pool} prov={provPool} unit="m³" precision={1} />
-            </div>
-            <span className="stat-subtext text-3">Calibrated safe-yield envelope</span>
-          </div>
+          <Stat
+            label="Weekly Cap Pool"
+            value={model.pool}
+            prov={provPool}
+            unit="m³"
+            precision={1}
+            subtext="Calibrated safe-yield envelope"
+            badge={<Chip variant="LIVE" size="sm" />}
+          />
 
-          <div className="stat-card">
-            <span className="stat-label text-2">Verified Total Demand (U)</span>
-            <div className="stat-value-row">
-              <Num value={model.sumU} prov={provDemand} unit="h" precision={1} />
-            </div>
-            <span className="stat-subtext text-3">Fused from reports & meters</span>
-          </div>
+          <Stat
+            label="Verified Total Demand (U)"
+            value={model.sumU}
+            prov={provDemand}
+            unit="h"
+            precision={1}
+            subtext="Fused from reports & meters"
+            badge={<Chip variant="SYNTH" size="sm" />}
+          />
 
-          <div className="stat-card">
-            <span className="stat-label text-2">Dignity Floor</span>
-            <div className="stat-value-row">
-              <Num value={assumptions.floor_m3} prov={provFloor} unit="m³" precision={0} />
-            </div>
-            <span className="stat-subtext text-3">Protected domestic allocation</span>
-          </div>
+          <Stat
+            label="Dignity Floor"
+            value={assumptions.floor_m3}
+            prov={provFloor}
+            unit="m³"
+            precision={0}
+            subtext="Protected domestic allocation"
+            badge={<Chip variant="ASSUMPTION" size="sm" />}
+          />
         </section>
 
+        {/* Aquifer Map Visualization */}
         <section className="map-section" aria-label="Aquifer Map Visualization">
           <MapShell farmers={model.farmers} />
         </section>
 
+        {/* Allocation Vectors */}
         <section className="table-section" aria-label="Allocation Vectors">
           <WorkedAllocationTable model={model} />
         </section>
