@@ -1,0 +1,37 @@
+{
+  "WRONG_duplicate_odd_root3": "dd29d333cfc578522be2ac62dad3b162173513674f4c6e0c6edb03c5ce51f511",
+  "fields": [
+    "farmerId",
+    "zone",
+    "week",
+    "alloc"
+  ],
+  "leaves": [
+    "db4021675ab8a5fdd2d0abc8b1c7af19b025ef6ab8f960c948aab842c9515be1",
+    "4cf1fdf4ff8d7a6749e1e8c6dc9d6b1d9fcde254cf9239c99c113ab7e7835177",
+    "ab3b0f880d59079828deeec6f9da209615a0ce900e32be1e85feb3865834521e",
+    "83480b82bc150246967d95c37992933fecbee0e15d44bdc94e70c22a50b79ac7"
+  ],
+  "root1": "db4021675ab8a5fdd2d0abc8b1c7af19b025ef6ab8f960c948aab842c9515be1",
+  "root3": "e03fddc98b8138d7c6d314f722074e4f033de836c11133d570adae04879a4b90",
+  "root4": "b0fb427d7e2a42bc6f6583fbbb54bed252c0e6d582ac95882f5a3bcd007bba38",
+  "root4_tampered_FC_plus10": "3c9e4579bbd32f5a1f70ab31e57c9452b637d82f859ed8ab4c663e43e0633293",
+  "rows": [
+    [
+      "F-A",
+      "25.103448"
+    ],
+    [
+      "F-B",
+      "26.896552"
+    ],
+    [
+      "F-C",
+      "17.931034"
+    ],
+    [
+      "F-D",
+      "34.068966"
+    ]
+  ]
+}

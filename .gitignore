@@ -4,7 +4,9 @@ node_modules/
 *.jar
 .env
 .env.local
+.env*
 *.log
+!docs/evidence/*.log
 .DS_Store
 Thumbs.db
 .idea/
