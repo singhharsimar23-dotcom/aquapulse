@@ -65,6 +65,9 @@ export interface ComputedFarmer extends SnapshotFarmer {
   escrow: number;
   weight: number;
   floor: number;
+  U: number;
+  T: number;
+  lam: number;
 }
 
 export interface ComputedDashboardModel {
@@ -169,8 +172,8 @@ export function computeTier0(
     ...f,
     blend: blends[idx],
     U: demands[idx],
-    T: blends[idx].T,
-    lam: blends[idx].lam,
+    T: blends[idx].T ?? 0,
+    lam: blends[idx].lam ?? 0,
     alloc: allocations[idx],
     released: escrowResults.released[idx],
     escrow: escrowResults.escrow[idx],

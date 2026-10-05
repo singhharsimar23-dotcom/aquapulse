@@ -4,14 +4,24 @@ import { useStore } from './store/useStore';
 import { fetchDashboardData } from './lib/api';
 import { computeTier0, SnapshotData } from './lib/snapshotLoader';
 import { MapShell } from './components/MapShell';
+import { LayerTree } from './components/LayerTree';
+import { FloatingWidget } from './components/FloatingWidget';
 import { WorkedAllocationTable } from './components/WorkedAllocationTable';
+import { W2SignalBoard } from './components/widgets/W2SignalBoard';
+import { W3ZoneStress } from './components/widgets/W3ZoneStress';
+import { W5AllocationWaterfall } from './components/widgets/W5AllocationWaterfall';
+import { W6ObjectGraph } from './components/widgets/W6ObjectGraph';
+import { W9MerkleInspector } from './components/widgets/W9MerkleInspector';
+import { ObjectInspector } from './components/ObjectInspector';
+import { ProveItDrawer } from './components/ProveItDrawer';
+import { CommandBar } from './components/CommandBar';
 import { WeeklyScrubber } from './components/WeeklyScrubber';
 import { HonestyPanel } from './components/HonestyPanel';
 import { ColdStartBanner } from './components/ColdStartBanner';
 import { Hero } from './components/Hero';
 import { Num } from './components/Num';
 import { Exempt } from './components/Exempt';
-import { Panel, Chip, Stat } from './design';
+import { Chip, Stat } from './design';
 import { Prov } from './lib/prov';
 
 export default function App() {
@@ -21,6 +31,9 @@ export default function App() {
     verifiedVsReports,
     setVerifiedVsReports,
     lite,
+    setHonestyPanelOpen,
+    openProveIt,
+    setCommandBarOpen,
   } = useStore();
 
   // Load dashboard data: snapshot-first with graceful fallback
@@ -88,11 +101,15 @@ export default function App() {
         <div className="header-meta">
           <div className="meta-pill">
             <span className="meta-label text-2">Zone:</span>
-            <Exempt reason="id" className="meta-val font-mono">{model.zone}</Exempt>
+            <Exempt reason="id" className="meta-val font-mono">
+              {model.zone}
+            </Exempt>
           </div>
           <div className="meta-pill">
             <span className="meta-label text-2">Week:</span>
-            <Exempt reason="axis-tick" className="meta-val font-mono">{model.week}</Exempt>
+            <Exempt reason="axis-tick" className="meta-val font-mono">
+              {model.week}
+            </Exempt>
           </div>
           <div className="meta-pill">
             <span className="meta-label text-2">Tier:</span>
@@ -105,6 +122,31 @@ export default function App() {
         </div>
 
         <div className="header-actions">
+          <button
+            className="cmd-bar-trigger-btn"
+            onClick={() => setCommandBarOpen(true)}
+            title="Open Command Launcher (Ctrl+K)"
+          >
+            <span>🔍 Command Bar</span>
+            <span className="cmd-shortcut font-mono text-2">Ctrl+K</span>
+          </button>
+
+          <button
+            className="header-prove-btn"
+            onClick={() => openProveIt()}
+            title="Inspect cryptographic & satellite provenance"
+          >
+            🛡️ Prove It
+          </button>
+
+          <button
+            className="header-honesty-btn"
+            onClick={() => setHonestyPanelOpen(true)}
+            title="Inspect Honesty Panel metrics & assumptions"
+          >
+            ⚖️ Honesty Panel
+          </button>
+
           <label className="toggle-label" title="Compare self-reported vs dual-signal verified allocations">
             <input
               type="checkbox"
@@ -169,14 +211,41 @@ export default function App() {
           />
         </section>
 
-        {/* Aquifer Map Visualization */}
+        {/* Aquifer Full-Bleed Map Visualization & Floating Widgets (§8.5) */}
         <section className="map-section" aria-label="Aquifer Map Visualization">
+          <LayerTree />
           <MapShell farmers={model.farmers} />
-        </section>
 
-        {/* Allocation Vectors */}
-        <section className="table-section" aria-label="Allocation Vectors">
-          <WorkedAllocationTable model={model} />
+          {/* Floating Widgets Overlay Canvas */}
+          <div className="widgets-overlay-canvas">
+            <FloatingWidget id="w1" badge={<Chip variant="LIVE" size="sm" label="Pure TS Core" />}>
+              <WorkedAllocationTable model={model} snapshot={snapshot} />
+            </FloatingWidget>
+
+            <FloatingWidget id="w2" badge={<Chip variant="LIVE" size="sm" label="Dual-Signal" />}>
+              <W2SignalBoard model={model} />
+            </FloatingWidget>
+
+            <FloatingWidget id="w3" badge={<Chip variant="LIVE" size="sm" label="SOE Gauge" />}>
+              <W3ZoneStress model={model} />
+            </FloatingWidget>
+
+            <FloatingWidget id="w5" badge={<Chip variant="LIVE" size="sm" label="Waterfall" />}>
+              <W5AllocationWaterfall model={model} />
+            </FloatingWidget>
+
+            <FloatingWidget id="w6" badge={<Chip variant="ASSUMPTION" size="sm" label="Theis Force Graph" />}>
+              <W6ObjectGraph model={model} />
+            </FloatingWidget>
+
+            <FloatingWidget id="w9" badge={<Chip variant="LIVE" size="sm" label="Cryptographic Ledger" />}>
+              <W9MerkleInspector model={model} />
+            </FloatingWidget>
+
+            <FloatingWidget id="inspector" badge={<Chip variant="LIVE" size="sm" label="Selected Telemetry" />}>
+              <ObjectInspector model={model} />
+            </FloatingWidget>
+          </div>
         </section>
       </main>
 
@@ -184,7 +253,10 @@ export default function App() {
         <WeeklyScrubber />
       </footer>
 
+      {/* Drawers and Overlays */}
       <HonestyPanel />
+      <ProveItDrawer />
+      <CommandBar model={model} />
     </div>
   );
 }

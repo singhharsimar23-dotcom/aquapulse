@@ -110,3 +110,82 @@ export function theisSuperposition(
   }
   return asMeters(totalDrawdown);
 }
+
+/**
+ * Bisection to find radius r where drawdown s(r, t) = s_thresh (§6.6).
+ * Monotonically decreasing with r.
+ */
+export function theisConeRadius(
+  Q_m3d: M3PerDay | number,
+  T_m2d: M2PerDay | number,
+  S: number,
+  t_d: number,
+  s_thresh: Meters | number
+): Meters {
+  if (Number(Q_m3d) <= 0 || t_d <= 0 || Number(s_thresh) <= 0) return asMeters(0.0);
+  const target = Number(s_thresh);
+  const s_near = theisDrawdown(Q_m3d, T_m2d, S, 0.1, t_d);
+  if (s_near < target) return asMeters(0.0);
+
+  let low = 0.1;
+  let high = 500.0;
+  while (theisDrawdown(Q_m3d, T_m2d, S, high, t_d) > target && high < 50000.0) {
+    high *= 2.0;
+  }
+
+  for (let iter = 0; iter < 50; iter++) {
+    const mid = (low + high) / 2.0;
+    const s = theisDrawdown(Q_m3d, T_m2d, S, mid, t_d);
+    if (Math.abs(s - target) < 1e-4) return asMeters(mid);
+    if (s > target) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+  return asMeters((low + high) / 2.0);
+}
+
+export interface InterferencePair {
+  i: number;
+  j: number;
+  distance_m: number;
+  drawdown_i_at_j: number;
+  drawdown_j_at_i: number;
+  interferes: boolean;
+}
+
+/**
+ * Checks mutual drawdown interference between well pairs.
+ * Interference occurs when each well's drawdown at the other > s_thresh (§6.6).
+ */
+export function checkInterference(
+  wells: WellObservation[],
+  T_m2d: M2PerDay | number,
+  S: number,
+  t_d: number,
+  s_thresh: Meters | number
+): InterferencePair[] {
+  const pairs: InterferencePair[] = [];
+  const thresh = Number(s_thresh);
+  for (let i = 0; i < wells.length; i++) {
+    for (let j = i + 1; j < wells.length; j++) {
+      const dx = wells[i].x - wells[j].x;
+      const dy = wells[i].y - wells[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist <= 0) continue;
+      const s_i_at_j = theisDrawdown(wells[i].Q_m3d, T_m2d, S, dist, t_d);
+      const s_j_at_i = theisDrawdown(wells[j].Q_m3d, T_m2d, S, dist, t_d);
+      const interferes = s_i_at_j > thresh && s_j_at_i > thresh;
+      pairs.push({
+        i,
+        j,
+        distance_m: dist,
+        drawdown_i_at_j: s_i_at_j,
+        drawdown_j_at_i: s_j_at_i,
+        interferes,
+      });
+    }
+  }
+  return pairs;
+}

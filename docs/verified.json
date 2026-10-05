@@ -509,5 +509,14 @@
     "sha256": "3734ec24e4175f0a9b97a74e1434d1108d4eafe505ee680bc8de589709672cbb",
     "excerpt": "TrueColor: MODIS_Aqua_CorrectedReflectance_TrueColor, Soil: SMAP_L3_Passive_Brightness_Temp_H, Veg: VIIRS_SNPP_NDVI_8Day; template: https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/{Layer}/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
     "note": "S6 spike for GIBS candidate layer IDs and WMTS template"
+  },
+  {
+    "id": "param:aquifer:deccan-basalt-t-s",
+    "name": "deccan-basalt-t-s",
+    "claim": "Deccan basalt T=45 m2/d, S=0.005",
+    "tag": "ASSUMPTION",
+    "unit": "m2/d and dimensionless",
+    "default": "T=45, S=0.005",
+    "note": "AQUAPULSE_V9_2_LEAN.md §6.6 and S7: Deccan basalt transmissivity and storativity baseline assumptions, editable in UI"
   }
 ]
