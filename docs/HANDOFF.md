@@ -1,10 +1,10 @@
-# S0a Handoff
+# S0b Handoff
 
 - Done:
-  - Reference oracle written to `reference/aquapulse_ref.py`; selftest passes.
-  - Exported 4 fixtures to `tests/golden/`.
-  - Scaffolding complete: `Makefile`, `scripts/check.py`, `scripts/verify.py`, `docs/verified.json`, `docs/PLAN.md`, `AGENTS.md`, `.nvmrc`, `.gitignore`, `.github/workflows/ci.yml`.
-  - `make verify S=S0a` passed; evidence in `docs/evidence/S0a.log`.
-- Next: Session S0b (audit + Gate G1).
+  - System audit completed in `docs/AUDIT.md` answering (a)–(i) and identifying legacy tests.
+  - Gate G1 logged in `docs/DECISIONS.md`: Option C selected (Tier-0 static TS core).
+  - Preflight, reference oracle selftest, and `scripts/check.py` passed.
+  - `make verify S=S0b` passed; evidence in `docs/evidence/S0b.log`.
+- Next: Session S1b (TypeScript math core in `packages/core/`).
 - Blocked:
   - S0a-inputs: need proposal and revised panel document in `docs/inputs/` (logged in `docs/BLOCKERS.md`).
